@@ -5,32 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <script type="text/javascript">
-        // 1. 설정값
         const storeBaseUrl = "https://brand.naver.com/starksein/products/11437271504";
         const gasUrl = "https://script.google.com/macros/s/AKfycbw_7EgiKK39h9zoJliRiOgp8RGEu0yFkqPe8F4uttODLAdrF95-RsaGm1lekTPcT0A6/exec";
 
-        // 2. 파라미터 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const postID = urlParams.get('p') || 'direct';
-        const blogID = urlParams.get('b') || 'unknown';
-
         function trackAndRedirect() {
-            const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
-            const logUrl = `${gasUrl}?b=${encodeURIComponent(blogID)}&p=${encodeURIComponent(postID)}&t=${new Date().getTime()}`;
-
-            // 이미지 객체를 이용한 데이터 전송 (가장 안정적임)
-            const img = new Image();
+            const urlParams = new URLSearchParams(window.location.search);
+            const fullUrl = urlParams.get('url'); // ?url=블로그주소 가져옴
             
-            // 이미지 로드 성공/실패 여부와 상관없이 0.3~0.5초 후 이동
-            const jump = () => {
-                window.location.replace(finalUrl);
-            };
+            let blogID = "direct";
+            let postID = "direct";
 
+            // 네이버 블로그 주소에서 ID와 포스팅 번호 추출 (정규표현식)
+            if (fullUrl) {
+                const match = fullUrl.match(/blog\.naver\.com\/([^\/]+)\/(\d+)/);
+                if (match) {
+                    blogID = match[1]; // 
+                    postID = match[2]; // 
+                } else {
+                    blogID = "other_url";
+                    postID = fullUrl;
+                }
+            }
+
+            const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
+            const logUrl = `${gasUrl}?b=${encodeURIComponent(blogID)}&p=${encodeURIComponent(postID)}`;
+
+            // 데이터 전송 및 리다이렉트
+            const img = new Image();
+            const jump = () => { window.location.replace(finalUrl); };
             img.onload = jump;
             img.onerror = jump;
             img.src = logUrl;
-
-            // 만약 네트워크 문제로 이미지가 응답이 없을 경우를 대비한 강제 이동 (0.5초)
             setTimeout(jump, 500);
         }
 
@@ -38,8 +43,6 @@
     </script>
 </head>
 <body style="background:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
-    <div style="text-align:center;">
-    </div>
+
 </body>
 </html>
-
