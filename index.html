@@ -2,37 +2,43 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이지 이동 중...</title>
     <script type="text/javascript">
-        // 1. 설정
+        // 1. 설정값
         const storeBaseUrl = "https://brand.naver.com/starksein/products/11437271504";
         const gasUrl = "https://script.google.com/macros/s/AKfycbw_7EgiKK39h9zoJliRiOgp8RGEu0yFkqPe8F4uttODLAdrF95-RsaGm1lekTPcT0A6/exec";
 
+        // 2. 파라미터 추출
         const urlParams = new URLSearchParams(window.location.search);
-        const postID = urlParams.get('p') || 'default';
-        const blogID = urlParams.get('b') || 'main_blog';
+        const postID = urlParams.get('p') || 'direct';
+        const blogID = urlParams.get('b') || 'unknown';
 
-        // 2. 통계 기록 및 이동 함수
-        async function trackAndRedirect() {
-            try {
-                // 구글 시트로 데이터 전송 (비동기 호출)
-                // fetch를 사용하여 로그를 기록합니다. mode: 'no-cors'는 응답 확인 없이 보낼 때 사용합니다.
-                fetch(`${gasUrl}?b=${blogID}&p=${postID}`, { mode: 'no-cors' });
-                
-                // 데이터 기록을 위해 아주 짧게 대기(0.1초) 후 리다이렉트
-                setTimeout(() => {
-                    const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
-                    window.location.replace(finalUrl);
-                }, 100);
-            } catch (e) {
-                // 에러 발생 시에도 쇼핑몰 이동은 보장
-                window.location.replace(storeBaseUrl);
-            }
+        function trackAndRedirect() {
+            const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
+            const logUrl = `${gasUrl}?b=${encodeURIComponent(blogID)}&p=${encodeURIComponent(postID)}&t=${new Date().getTime()}`;
+
+            // 이미지 객체를 이용한 데이터 전송 (가장 안정적임)
+            const img = new Image();
+            
+            // 이미지 로드 성공/실패 여부와 상관없이 0.3~0.5초 후 이동
+            const jump = () => {
+                window.location.replace(finalUrl);
+            };
+
+            img.onload = jump;
+            img.onerror = jump;
+            img.src = logUrl;
+
+            // 만약 네트워크 문제로 이미지가 응답이 없을 경우를 대비한 강제 이동 (0.5초)
+            setTimeout(jump, 500);
         }
 
         window.onload = trackAndRedirect;
     </script>
 </head>
-<body style="background:#fff;">
+<body style="background:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+    <div style="text-align:center;">
+    </div>
 </body>
 </html>
-
