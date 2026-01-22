@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <script type="text/javascript">
+        // 1. 기본 설정
+        const storeBaseUrl = "https://smartstore.naver.com/내스토어아이디/products/상품번호";
+
+        // 2. URL에서 파라미터 읽기 (예: ?p=post123)
+        const urlParams = new URLSearchParams(window.location.search);
+        const postID = urlParams.get('p') || 'default'; // 포스팅 구분값
+        const blogID = urlParams.get('b') || 'main_blog'; // 블로그 구분값
+
+        // 3. nt_source(블로그)와 nt_medium(포스팅) 조합
+        // 스토어 통계에서 이 값들로 필터링해서 볼 수 있습니다.
+        const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
+
+        // 4. 즉시 이동 (히스토리에 남지 않게 replace 사용)
+        window.location.replace(finalUrl);
+    </script>
+</head>
+<body style="background:#fff;">
+    </body>
+</html>
