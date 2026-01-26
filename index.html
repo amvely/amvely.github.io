@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript">
+        const storeBaseUrl = "https://brand.naver.com/starksein/products/11437271504";
+        const gasUrl = "https://script.google.com/macros/s/AKfycbw_7EgiKK39h9zoJliRiOgp8RGEu0yFkqPe8F4uttODLAdrF95-RsaGm1lekTPcT0A6/exec";
+
+        function trackAndRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fullUrl = urlParams.get('url'); // ?url=블로그주소 가져옴
+            
+            let blogID = "direct";
+            let postID = "direct";
+
+            // 네이버 블로그 주소에서 ID와 포스팅 번호 추출 (정규표현식)
+            if (fullUrl) {
+                const match = fullUrl.match(/blog\.naver\.com\/([^\/]+)\/(\d+)/);
+                if (match) {
+                    blogID = match[1]; // 
+                    postID = match[2]; // 
+                } else {
+                    blogID = "other_url";
+                    postID = fullUrl;
+                }
+            }
+
+            const finalUrl = `${storeBaseUrl}?nt_source=${blogID}&nt_medium=${postID}`;
+            const logUrl = `${gasUrl}?b=${encodeURIComponent(blogID)}&p=${encodeURIComponent(postID)}`;
+
+            // 데이터 전송 및 리다이렉트
+            const img = new Image();
+            const jump = () => { window.location.replace(finalUrl); };
+            img.onload = jump;
+            img.onerror = jump;
+            img.src = logUrl;
+            setTimeout(jump, 500);
+        }
+
+        window.onload = trackAndRedirect;
+    </script>
+</head>
+<body style="background:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+
+</body>
+</html>
