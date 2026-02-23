@@ -146,15 +146,20 @@ header{background:var(--surf);border-bottom:1px solid var(--bd);display:flex;ali
 .tbl-sc{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead tr{background:var(--surf2)}
-thead th{font-size:10px;font-weight:800;color:var(--tx3);letter-spacing:.5px;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--bd)}
+thead th{font-size:10px;font-weight:800;color:var(--tx3);letter-spacing:.5px;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--bd);cursor:pointer;user-select:none;transition:background .1s}
+thead th:hover{background:var(--surf3);color:var(--tx2)}
 thead th.r{text-align:right}
+thead th.sort-asc::after{content:' ↑';color:var(--brand)}
+thead th.sort-desc::after{content:' ↓';color:var(--brand)}
+thead th.no-sort{cursor:default}
+thead th.no-sort:hover{background:transparent;color:var(--tx3)}
 tbody tr{border-bottom:1px solid var(--surf3);transition:background .1s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--surf2)}
 tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:nowrap}
 .td-r{text-align:right;font-family:var(--mono);color:var(--tx2)}
 .td-rh{text-align:right;font-family:var(--mono);color:var(--tx);font-weight:600}
-.td-br{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-br{white-space:normal;word-break:break-word;min-width:160px;max-width:260px}
 .td-n{font-size:11px;color:var(--tx3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
 .sbadge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:800}
 .sa{background:var(--green-l);color:var(--green)}
@@ -208,6 +213,8 @@ tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:now
       <div class="fg"><label>광고 계정 ID</label><input type="text" id="inp-acct" placeholder="act_123456789 또는 숫자만"/></div>
       <div class="fg"><label>조회 기간</label>
         <select id="inp-date">
+          <option value="yesterday">어제</option>
+          <option value="last_week">지난주</option>
           <option value="last_7d">최근 7일</option>
           <option value="last_14d">최근 14일</option>
           <option value="last_30d" selected>최근 30일</option>
@@ -244,6 +251,8 @@ tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:now
       <div class="live-dot"><div class="dot"></div><span id="acct-lbl">연결됨</span></div>
       <div class="date-ctrl">
         <select id="dash-date" onchange="onDateChange()">
+          <option value="yesterday">어제</option>
+          <option value="last_week">지난주</option>
           <option value="last_7d">최근 7일</option>
           <option value="last_14d">최근 14일</option>
           <option value="last_30d" selected>최근 30일</option>
@@ -297,7 +306,7 @@ tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:now
   <div class="tab-panel on" id="tab-overview">
     <div class="sec">
       <div class="sec-lbl">성과 추이</div>
-      <div class="charts-r7" style="margin-bottom:12px">
+      <div style="margin-bottom:12px">
         <div class="chart-card">
           <div class="cc-ttl">일별 성과 트렌드</div>
           <div class="cc-sub" style="margin-bottom:10px">Daily Performance</div>
@@ -309,13 +318,7 @@ tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:now
             <button class="t-tab" onclick="switchTrend('cpc',this)">CPC</button>
             <button class="t-tab" onclick="switchTrend('roas',this)">ROAS</button>
           </div>
-          <div style="position:relative;height:240px"><canvas id="ch-trend"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="cc-ttl">캠페인별 지출</div>
-          <div class="cc-sub">Spend by Campaign</div>
-          <div style="position:relative;height:150px"><canvas id="ch-donut"></canvas></div>
-          <div class="dl" id="donut-leg"></div>
+          <div style="position:relative;height:280px"><canvas id="ch-trend"></canvas></div>
         </div>
       </div>
       <div class="charts-3">
@@ -397,28 +400,64 @@ tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:now
       <div class="sec-lbl">인구통계 분석</div>
       <div class="demo-grid">
         <div class="chart-card">
-          <div class="cc-ttl">연령대별 지출</div><div class="cc-sub">Age Group Spend</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="cc-ttl" id="age-ttl">연령대별 지출</div>
+            <select id="age-metric" onchange="renderAgeChart()" style="font-family:var(--font);font-size:11px;font-weight:700;border:1.5px solid var(--bd);border-radius:7px;padding:4px 8px;color:var(--tx);background:var(--surf2);cursor:pointer;outline:none">
+              <option value="spend">지출</option>
+              <option value="impressions">노출수</option>
+              <option value="clicks">클릭수</option>
+              <option value="ctr">CTR</option>
+              <option value="cpc">CPC</option>
+              <option value="cpm">CPM</option>
+            </select>
+          </div>
+          <div class="cc-sub">Age Group</div>
           <div style="position:relative;height:220px"><canvas id="ch-age"></canvas></div>
         </div>
         <div class="chart-card">
-          <div class="cc-ttl">성별 성과</div><div class="cc-sub">Gender Performance</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="cc-ttl" id="gender-ttl">성별 지출</div>
+            <select id="gender-metric" onchange="renderGenderChart()" style="font-family:var(--font);font-size:11px;font-weight:700;border:1.5px solid var(--bd);border-radius:7px;padding:4px 8px;color:var(--tx);background:var(--surf2);cursor:pointer;outline:none">
+              <option value="spend">지출</option>
+              <option value="impressions">노출수</option>
+              <option value="clicks">클릭수</option>
+              <option value="ctr">CTR</option>
+              <option value="cpc">CPC</option>
+              <option value="cpm">CPM</option>
+            </select>
+          </div>
+          <div class="cc-sub">Gender Performance</div>
           <div style="position:relative;height:220px"><canvas id="ch-gender"></canvas></div>
         </div>
       </div>
-      <div class="chart-card">
-        <div class="cc-ttl">시간대별 지출</div><div class="cc-sub">Hourly Spend (광고주 시간대 기준)</div>
+      <div class="chart-card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="cc-ttl" id="hourly-ttl">시간대별 지출</div>
+          <select id="hourly-metric" onchange="renderHourlyChart()" style="font-family:var(--font);font-size:11px;font-weight:700;border:1.5px solid var(--bd);border-radius:7px;padding:4px 8px;color:var(--tx);background:var(--surf2);cursor:pointer;outline:none">
+            <option value="spend">지출</option>
+            <option value="impressions">노출수</option>
+            <option value="clicks">클릭수</option>
+            <option value="ctr">CTR</option>
+            <option value="cpc">CPC</option>
+          </select>
+        </div>
+        <div class="cc-sub">Hourly (광고주 시간대 기준)</div>
         <div style="position:relative;height:220px"><canvas id="ch-hourly"></canvas></div>
       </div>
-      <div style="margin-top:12px">
-        <div class="charts-2">
-          <div class="chart-card">
-            <div class="cc-ttl">연령대별 CTR</div><div class="cc-sub">Age Group CTR</div>
-            <div style="position:relative;height:180px"><canvas id="ch-age-ctr"></canvas></div>
+      <div class="charts-2">
+        <div class="chart-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="cc-ttl">연령대별 CTR</div>
           </div>
-          <div class="chart-card">
-            <div class="cc-ttl">연령대별 CPC</div><div class="cc-sub">Age Group CPC</div>
-            <div style="position:relative;height:180px"><canvas id="ch-age-cpc"></canvas></div>
+          <div class="cc-sub">Age Group CTR</div>
+          <div style="position:relative;height:180px"><canvas id="ch-age-ctr"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="cc-ttl">연령대별 CPC</div>
           </div>
+          <div class="cc-sub">Age Group CPC</div>
+          <div style="position:relative;height:180px"><canvas id="ch-age-cpc"></canvas></div>
         </div>
       </div>
     </div>
@@ -465,6 +504,13 @@ function getRange(){
     if(s&&u)return{since:s,until:u};
   }
   const now=new Date(),f=d=>d.toISOString().slice(0,10);
+  if(v==='yesterday'){const y=new Date(now-864e5);return{since:f(y),until:f(y)};}
+  if(v==='last_week'){
+    const day=now.getDay();
+    const mon=new Date(now);mon.setDate(now.getDate()-day-(day===0?6:1)-7);
+    const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    return{since:f(mon),until:f(sun)};
+  }
   if(v==='last_7d')return{since:f(new Date(now-6*864e5)),until:f(now)};
   if(v==='last_14d')return{since:f(new Date(now-13*864e5)),until:f(now)};
   if(v==='last_30d')return{since:f(new Date(now-29*864e5)),until:f(now)};
@@ -634,6 +680,38 @@ function baseOpts(extra={}){
   };
 }
 
+/* ─── Sort State ─── */
+const sortState={daily:{col:null,dir:1},camp:{col:null,dir:1},adset:{col:null,dir:1},ad:{col:null,dir:1}};
+
+function sortedData(data,tbl,cols){
+  const st=sortState[tbl];
+  if(st.col===null)return data;
+  return[...data].sort((a,b)=>{
+    const va=cols[st.col](a),vb=cols[st.col](b);
+    if(typeof va==='number')return(va-vb)*st.dir;
+    return String(va).localeCompare(String(vb))*st.dir;
+  });
+}
+
+function makeSortTH(label,tbl,colIdx,isRight=false){
+  return`<th class="${isRight?'r':''}" onclick="doSort('${tbl}',${colIdx})" data-col="${colIdx}">${label}</th>`;
+}
+
+function doSort(tbl,col){
+  const st=sortState[tbl];
+  if(st.col===col)st.dir*=-1;else{st.col=col;st.dir=-1;}
+  if(tbl==='daily')renderDailyTable();
+  else if(tbl==='camp')renderCampTable();
+  else if(tbl==='adset')renderAdsetTable();
+  else if(tbl==='ad')renderAdTable();
+}
+
+function getSortClass(tbl,col){
+  const st=sortState[tbl];
+  if(st.col!==col)return'';
+  return st.dir===-1?'sort-desc':'sort-asc';
+}
+
 /* ─── OVERVIEW ─── */
 const TMETA={
   spend:{color:'#dc2626',lbl:'지출',fmt:v=>fmtW(v),tfmt:v=>fmtW(v),get:d=>parseFloat(d.spend||0)},
@@ -664,17 +742,6 @@ function renderOverview(){
     padding:2
   };
   ch.trend=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:meta.color,backgroundColor:g,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:0.4,fill:true}]},options:o});
-
-  // Donut
-  const top=rawCamp.slice(0,6);const total=top.reduce((s,c)=>s+parseFloat(c.spend||0),0);
-  killCh('donut');
-  const dCtx=document.getElementById('ch-donut').getContext('2d');
-  ch.donut=new Chart(dCtx,{type:'doughnut',
-    data:{labels:top.map(c=>c.campaign_name||c.adset_name||'—'),datasets:[{data:top.map(c=>parseFloat(c.spend||0)),backgroundColor:PAL,borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},datalabels:{display:true,color:'#fff',font:{size:10,weight:'700'},formatter:(v,ctx)=>{const pct=(v/total*100);return pct>5?pct.toFixed(0)+'%':'';}}
-      ,tooltip:{backgroundColor:'#fff',borderColor:'#e3e6f0',borderWidth:1,titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},callbacks:{label:c=>' '+fmtW(c.raw)}}}}
-  });
-  document.getElementById('donut-leg').innerHTML=top.map((c,i)=>`<div class="dr"><div class="dc" style="background:${PAL[i]}"></div><span class="dn">${c.campaign_name||'—'}</span><span class="da">${fmtW(c.spend)}</span><span class="dp">${total?(parseFloat(c.spend||0)/total*100).toFixed(0)+'%':'0%'}</span></div>`).join('');
 
   // CTR mini
   killCh('ctr');
@@ -712,119 +779,178 @@ function switchTrend(m,btn){
 }
 
 /* ─── DAILY TABLE ─── */
+function dailyRowData(d){
+  const conv=actS([d],CONV),revenue=valS([d],CONV);
+  const sp=parseFloat(d.spend||0),cl=parseFloat(d.clicks||0);
+  return{date:d.date_start,spend:sp,imp:parseFloat(d.impressions||0),clicks:cl,
+    ctr:parseFloat(d.ctr||0),cpc:parseFloat(d.cpc||0),cpm:parseFloat(d.cpm||0),
+    conv,cvr:cl?conv/cl*100:0,cpa:conv?sp/conv:0,roas:sp?revenue/sp:0,
+    reach:parseFloat(d.reach||0),freq:parseFloat(d.frequency||0)};
+}
+const DAILY_COLS=[r=>r.date,r=>r.spend,r=>r.imp,r=>r.clicks,r=>r.ctr,r=>r.cpc,r=>r.cpm,r=>r.conv,r=>r.cvr,r=>r.cpa,r=>r.roas,r=>r.reach,r=>r.freq];
+
 function renderDailyTable(){
   const box=document.getElementById('daily-tbl');
   if(!rawDaily.length){box.innerHTML='<div class="empty">일별 데이터 없음</div>';return;}
-  const rows=[...rawDaily].reverse();
+  const allRows=rawDaily.map(dailyRowData);
+  const sorted=sortedData(allRows,'daily',DAILY_COLS);
+  const G=i=>getSortClass('daily',i);
   box.innerHTML=`<table>
   <thead><tr>
-    <th>날짜</th><th class="r">지출</th><th class="r">노출수</th><th class="r">클릭수</th>
-    <th class="r">CTR</th><th class="r">CPC</th><th class="r">CPM</th>
-    <th class="r">전환수</th><th class="r">CVR</th><th class="r">CPA</th><th class="r">ROAS</th><th class="r">도달수</th><th class="r">빈도</th>
+    <th class="${G(0)}" onclick="doSort('daily',0)">날짜</th>
+    <th class="r ${G(1)}" onclick="doSort('daily',1)">지출</th>
+    <th class="r ${G(2)}" onclick="doSort('daily',2)">노출수</th>
+    <th class="r ${G(3)}" onclick="doSort('daily',3)">클릭수</th>
+    <th class="r ${G(4)}" onclick="doSort('daily',4)">CTR</th>
+    <th class="r ${G(5)}" onclick="doSort('daily',5)">CPC</th>
+    <th class="r ${G(6)}" onclick="doSort('daily',6)">CPM</th>
+    <th class="r ${G(7)}" onclick="doSort('daily',7)">전환수</th>
+    <th class="r ${G(8)}" onclick="doSort('daily',8)">CVR</th>
+    <th class="r ${G(9)}" onclick="doSort('daily',9)">CPA</th>
+    <th class="r ${G(10)}" onclick="doSort('daily',10)">ROAS</th>
+    <th class="r ${G(11)}" onclick="doSort('daily',11)">도달수</th>
+    <th class="r ${G(12)}" onclick="doSort('daily',12)">빈도</th>
   </tr></thead>
-  <tbody>${rows.map(d=>{
-    const conv=actS([d],CONV),revenue=valS([d],CONV);
-    const sp=parseFloat(d.spend||0),cl=parseFloat(d.clicks||0);
-    const cvr=cl?conv/cl*100:0,cpa=conv?sp/conv:0,roas=sp?revenue/sp:0;
-    return`<tr>
-      <td style="font-family:var(--mono);font-weight:600">${d.date_start}</td>
-      <td class="td-rh">${fmtW(d.spend)}</td>
-      <td class="td-r">${fmtN(d.impressions)}</td>
-      <td class="td-r">${fmtN(d.clicks)}</td>
-      <td class="td-r">${fmtPct(d.ctr)}</td>
-      <td class="td-r">${fmtW(d.cpc)}</td>
-      <td class="td-r">${fmtW(d.cpm)}</td>
-      <td class="td-r">${conv>0?fmtN(conv):'—'}</td>
-      <td class="td-r">${cvr>0?cvr.toFixed(2)+'%':'—'}</td>
-      <td class="td-r">${cpa>0?fmtW(cpa):'—'}</td>
-      <td class="td-r">${roas>0?roas.toFixed(2)+'x':'—'}</td>
-      <td class="td-r">${fmtN(d.reach)}</td>
-      <td class="td-r">${d.frequency?parseFloat(d.frequency).toFixed(2):'—'}</td>
-    </tr>`;
-  }).join('')}</tbody>
-  </table>`;
+  <tbody>${sorted.map(r=>`<tr>
+    <td style="font-family:var(--mono);font-weight:600">${r.date}</td>
+    <td class="td-rh">${fmtW(r.spend)}</td>
+    <td class="td-r">${fmtN(r.imp)}</td>
+    <td class="td-r">${fmtN(r.clicks)}</td>
+    <td class="td-r">${r.ctr?r.ctr.toFixed(2)+'%':'—'}</td>
+    <td class="td-r">${fmtW(r.cpc)}</td>
+    <td class="td-r">${fmtW(r.cpm)}</td>
+    <td class="td-r">${r.conv>0?fmtN(r.conv):'—'}</td>
+    <td class="td-r">${r.cvr>0?r.cvr.toFixed(2)+'%':'—'}</td>
+    <td class="td-r">${r.cpa>0?fmtW(r.cpa):'—'}</td>
+    <td class="td-r">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
+    <td class="td-r">${fmtN(r.reach)}</td>
+    <td class="td-r">${r.freq?r.freq.toFixed(2):'—'}</td>
+  </tr>`).join('')}</tbody></table>`;
 }
 
 /* ─── Metrics row builder ─── */
-function metricsTDs(ins){
+function getMetrics(ins){
   const conv=actS([ins],CONV),revenue=valS([ins],CONV);
   const sp=parseFloat(ins.spend||0),cl=parseFloat(ins.clicks||0);
-  const cvr=cl?conv/cl*100:0,cpa=conv?sp/conv:0,roas=sp?revenue/sp:0;
-  const rCls=roas>=3?'rg':roas>=1?'rb':'rl';
-  return`
-    <td class="td-rh">${fmtW(ins.spend)}</td>
-    <td class="td-r">${fmtN(ins.impressions)}</td>
-    <td class="td-r">${fmtN(ins.clicks)}</td>
-    <td class="td-r">${fmtPct(ins.ctr)}</td>
-    <td class="td-r">${fmtW(ins.cpc)}</td>
-    <td class="td-r">${fmtW(ins.cpm)}</td>
-    <td class="td-r">${conv>0?fmtN(conv):'—'}</td>
-    <td class="td-r">${cvr>0?cvr.toFixed(2)+'%':'—'}</td>
-    <td class="td-r">${cpa>0?fmtW(cpa):'—'}</td>
-    <td class="td-r"><span class="rp ${rCls}">${roas>0?roas.toFixed(2)+'x':'—'}</span></td>`;
+  return{spend:sp,imp:parseFloat(ins.impressions||0),clicks:cl,ctr:parseFloat(ins.ctr||0),
+    cpc:parseFloat(ins.cpc||0),cpm:parseFloat(ins.cpm||0),conv,
+    cvr:cl?conv/cl*100:0,cpa:conv?sp/conv:0,roas:sp?revenue/sp:0};
 }
-const metricsTH=()=>`<th class="r">지출</th><th class="r">노출수</th><th class="r">클릭수</th><th class="r">CTR</th><th class="r">CPC</th><th class="r">CPM</th><th class="r">전환수</th><th class="r">CVR</th><th class="r">CPA</th><th class="r">ROAS</th>`;
+function metricsTDs(m){
+  const rCls=m.roas>=3?'rg':m.roas>=1?'rb':'rl';
+  return`
+    <td class="td-rh">${fmtW(m.spend)}</td>
+    <td class="td-r">${fmtN(m.imp)}</td>
+    <td class="td-r">${fmtN(m.clicks)}</td>
+    <td class="td-r">${m.ctr?m.ctr.toFixed(2)+'%':'—'}</td>
+    <td class="td-r">${fmtW(m.cpc)}</td>
+    <td class="td-r">${fmtW(m.cpm)}</td>
+    <td class="td-r">${m.conv>0?fmtN(m.conv):'—'}</td>
+    <td class="td-r">${m.cvr>0?m.cvr.toFixed(2)+'%':'—'}</td>
+    <td class="td-r">${m.cpa>0?fmtW(m.cpa):'—'}</td>
+    <td class="td-r"><span class="rp ${rCls}">${m.roas>0?m.roas.toFixed(2)+'x':'—'}</span></td>`;
+}
+
+function metricSortTH(tbl,startIdx){
+  const labels=['지출','노출수','클릭수','CTR','CPC','CPM','전환수','CVR','CPA','ROAS'];
+  return labels.map((l,i)=>`<th class="r ${getSortClass(tbl,startIdx+i)}" onclick="doSort('${tbl}',${startIdx+i})">${l}</th>`).join('');
+}
 
 /* ─── CAMPAIGN TABLE ─── */
+const CAMP_COLS=[
+  c=>c.campaign_name||'',
+  c=>getMetrics(c).spend, c=>getMetrics(c).imp, c=>getMetrics(c).clicks, c=>getMetrics(c).ctr,
+  c=>getMetrics(c).cpc, c=>getMetrics(c).cpm, c=>getMetrics(c).conv,
+  c=>getMetrics(c).cvr, c=>getMetrics(c).cpa, c=>getMetrics(c).roas
+];
+
 function renderCampTable(){
   const box=document.getElementById('camp-tbl');
-  const maxSp=Math.max(...rawCamp.map(c=>parseFloat(c.spend||0)));
   document.getElementById('camp-cnt').textContent=rawCamp.length+'개 캠페인';
   if(!rawCamp.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
-  box.innerHTML=`<table><thead><tr><th>캠페인명</th><th>상태</th>${metricsTH()}</tr></thead>
-  <tbody>${rawCamp.map(c=>{
-    const bp=maxSp?Math.round(parseFloat(c.spend||0)/maxSp*100):0;
-    const st=c.campaign_status||c.status||'';
-    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
-    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
+  const sorted=sortedData(rawCamp,'camp',CAMP_COLS);
+  const maxSp=Math.max(...sorted.map(c=>parseFloat(c.spend||0)));
+  const G=i=>getSortClass('camp',i);
+  box.innerHTML=`<table><thead><tr>
+    <th class="${G(0)}" onclick="doSort('camp',0)">캠페인명</th>
+    ${metricSortTH('camp',1)}
+  </tr></thead>
+  <tbody>${sorted.map(c=>{
+    const m=getMetrics(c);
+    const bp=maxSp?Math.round(m.spend/maxSp*100):0;
     return`<tr>
-      <td><div class="td-br" title="${c.campaign_name||'—'}" style="font-weight:700">${c.campaign_name||'—'}</div><div style="height:3px;background:var(--bd);border-radius:99px;margin-top:3px;min-width:50px;overflow:hidden"><div style="height:100%;background:var(--brand);border-radius:99px;width:${bp}%"></div></div></td>
-      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
-      ${metricsTDs(c)}
+      <td><div class="td-br" style="font-weight:700">${c.campaign_name||'—'}</div><div style="height:3px;background:var(--bd);border-radius:99px;margin-top:3px;min-width:50px;overflow:hidden"><div style="height:100%;background:var(--brand);border-radius:99px;width:${bp}%"></div></div></td>
+      ${metricsTDs(m)}
     </tr>`;
   }).join('')}</tbody></table>`;
 }
 
 /* ─── ADSET TABLE ─── */
+const ADSET_COLS=[
+  a=>a.campaign_name||'', a=>a.adset_name||'',
+  a=>getMetrics(a).spend, a=>getMetrics(a).imp, a=>getMetrics(a).clicks, a=>getMetrics(a).ctr,
+  a=>getMetrics(a).cpc, a=>getMetrics(a).cpm, a=>getMetrics(a).conv,
+  a=>getMetrics(a).cvr, a=>getMetrics(a).cpa, a=>getMetrics(a).roas
+];
+
 function renderAdsetTable(){
   const box=document.getElementById('adset-tbl');
   document.getElementById('adset-cnt').textContent=rawAdset.length+'개 광고세트';
   if(!rawAdset.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
-  box.innerHTML=`<table><thead><tr><th>캠페인</th><th>광고세트명</th><th>상태</th>${metricsTH()}</tr></thead>
-  <tbody>${rawAdset.map(a=>{
-    const st=a.adset_status||a.status||'';
-    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
-    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
-    return`<tr>
-      <td><div class="td-n">${a.campaign_name||'—'}</div></td>
-      <td><div class="td-br" style="font-weight:700" title="${a.adset_name||'—'}">${a.adset_name||'—'}</div></td>
-      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
-      ${metricsTDs(a)}
-    </tr>`;
-  }).join('')}</tbody></table>`;
+  const sorted=sortedData(rawAdset,'adset',ADSET_COLS);
+  const G=i=>getSortClass('adset',i);
+  box.innerHTML=`<table><thead><tr>
+    <th class="${G(0)}" onclick="doSort('adset',0)">캠페인</th>
+    <th class="${G(1)}" onclick="doSort('adset',1)">광고세트명</th>
+    ${metricSortTH('adset',2)}
+  </tr></thead>
+  <tbody>${sorted.map(a=>`<tr>
+    <td><div class="td-n">${a.campaign_name||'—'}</div></td>
+    <td><div class="td-br" style="font-weight:700">${a.adset_name||'—'}</div></td>
+    ${metricsTDs(getMetrics(a))}
+  </tr>`).join('')}</tbody></table>`;
 }
 
 /* ─── AD TABLE ─── */
+const AD_COLS=[
+  a=>a.campaign_name||'', a=>a.adset_name||'', a=>a.ad_name||'',
+  a=>getMetrics(a).spend, a=>getMetrics(a).imp, a=>getMetrics(a).clicks, a=>getMetrics(a).ctr,
+  a=>getMetrics(a).cpc, a=>getMetrics(a).cpm, a=>getMetrics(a).conv,
+  a=>getMetrics(a).cvr, a=>getMetrics(a).cpa, a=>getMetrics(a).roas
+];
+
 function renderAdTable(){
   const box=document.getElementById('ad-tbl');
   document.getElementById('ad-cnt').textContent=rawAd.length+'개 광고';
   if(!rawAd.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
-  box.innerHTML=`<table><thead><tr><th>캠페인</th><th>광고세트</th><th>광고명</th><th>상태</th>${metricsTH()}</tr></thead>
-  <tbody>${rawAd.map(a=>{
-    const st=a.ad_status||a.status||'';
-    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
-    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
-    return`<tr>
-      <td><div class="td-n">${a.campaign_name||'—'}</div></td>
-      <td><div class="td-n">${a.adset_name||'—'}</div></td>
-      <td><div class="td-br" style="font-weight:700" title="${a.ad_name||'—'}">${a.ad_name||'—'}</div></td>
-      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
-      ${metricsTDs(a)}
-    </tr>`;
-  }).join('')}</tbody></table>`;
+  const sorted=sortedData(rawAd,'ad',AD_COLS);
+  const G=i=>getSortClass('ad',i);
+  box.innerHTML=`<table><thead><tr>
+    <th class="${G(0)}" onclick="doSort('ad',0)">캠페인</th>
+    <th class="${G(1)}" onclick="doSort('ad',1)">광고세트</th>
+    <th class="${G(2)}" onclick="doSort('ad',2)">광고명</th>
+    ${metricSortTH('ad',3)}
+  </tr></thead>
+  <tbody>${sorted.map(a=>`<tr>
+    <td><div class="td-n">${a.campaign_name||'—'}</div></td>
+    <td><div class="td-n">${a.adset_name||'—'}</div></td>
+    <td style="font-weight:700;white-space:normal;word-break:break-word;min-width:180px;max-width:300px">${a.ad_name||'—'}</td>
+    ${metricsTDs(getMetrics(a))}
+  </tr>`).join('')}</tbody></table>`;
 }
 
 /* ─── DEMOGRAPHICS ─── */
+const DEMO_LABELS={spend:'지출',impressions:'노출수',clicks:'클릭수',ctr:'CTR',cpc:'CPC',cpm:'CPM'};
+const DEMO_FMT={spend:fmtW,impressions:fmtN,clicks:fmtN,ctr:v=>v.toFixed(2)+'%',cpc:fmtW,cpm:fmtW};
+const DEMO_COLORS=['#2563eb','#059669','#7c3aed','#d97706','#dc2626','#db2777','#0891b2'];
+
+function demoVal(d,metric){
+  if(metric==='ctr')return parseFloat(d.ctr||0);
+  if(metric==='cpc')return parseFloat(d.cpc||0);
+  if(metric==='cpm')return parseFloat(d.cpm||0);
+  return parseFloat(d[metric]||0);
+}
+
 function renderDemo(){
   renderAgeChart();
   renderGenderChart();
@@ -836,54 +962,74 @@ function renderDemo(){
 function renderAgeChart(){
   killCh('age');
   if(!rawAge.length)return;
+  const metric=document.getElementById('age-metric').value;
+  const lbl=DEMO_LABELS[metric];
+  document.getElementById('age-ttl').textContent=`연령대별 ${lbl}`;
   const ages=['13-17','18-24','25-34','35-44','45-54','55-64','65+'];
-  const spends=ages.map(ag=>{
-    const found=rawAge.find(d=>d.age===ag);
-    return found?parseFloat(found.spend||0):0;
-  }).filter((_,i)=>rawAge.some(d=>d.age===ages[i]));
   const labels=ages.filter(ag=>rawAge.some(d=>d.age===ag));
+  const vals=labels.map(ag=>{const f=rawAge.find(d=>d.age===ag);return f?demoVal(f,metric):0;});
+  const fmt=DEMO_FMT[metric];
   const o=baseOpts();
-  o.scales.y.ticks.callback=v=>fmtW(v);
-  o.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
-  o.plugins.datalabels={display:true,color:'#fff',font:{size:10,weight:'700'},formatter:v=>fmtW(v)};
+  o.scales.y.ticks.callback=fmt;
+  o.plugins.tooltip.callbacks={label:c=>' '+fmt(c.raw)};
+  o.plugins.datalabels={display:true,color:'#fff',font:{size:10,weight:'700'},
+    anchor:'end',align:'start',formatter:v=>fmt(v)};
   ch.age=new Chart(document.getElementById('ch-age'),{type:'bar',
-    data:{labels,datasets:[{data:spends,backgroundColor:PAL.slice(0,labels.length),borderRadius:6,borderSkipped:false}]},
+    data:{labels,datasets:[{data:vals,backgroundColor:DEMO_COLORS.slice(0,labels.length),borderRadius:6,borderSkipped:false}]},
     options:o});
 }
 
 function renderGenderChart(){
   killCh('gender');
   if(!rawGender.length)return;
+  const metric=document.getElementById('gender-metric').value;
+  const lbl=DEMO_LABELS[metric];
+  document.getElementById('gender-ttl').textContent=`성별 ${lbl}`;
   const gMap={'male':'남성','female':'여성','unknown':'불명'};
   const labels=rawGender.map(g=>gMap[g.gender]||g.gender);
-  const spends=rawGender.map(g=>parseFloat(g.spend||0));
-  const o=baseOpts();o.cutout='65%';
-  o.plugins.datalabels={display:true,color:'#fff',font:{size:11,weight:'700'},formatter:(v,ctx)=>{
-    const tot=spends.reduce((s,x)=>s+x,0);return tot?(v/tot*100).toFixed(0)+'%':'';
-  }};
-  o.plugins.tooltip={backgroundColor:'#fff',borderColor:'#e3e6f0',borderWidth:1,titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},callbacks:{label:c=>{const tot=spends.reduce((s,x)=>s+x,0);return ` ${fmtW(c.raw)} (${tot?(c.raw/tot*100).toFixed(1):'0'}%)`}}};
+  const vals=rawGender.map(g=>demoVal(g,metric));
+  const fmt=DEMO_FMT[metric];
+  const total=vals.reduce((s,x)=>s+x,0);
   ch.gender=new Chart(document.getElementById('ch-gender'),{type:'doughnut',
-    data:{labels,datasets:[{data:spends,backgroundColor:['#2563eb','#db2777','#94a3b8'],borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:o.plugins}});
+    data:{labels,datasets:[{data:vals,backgroundColor:['#2563eb','#db2777','#94a3b8'],borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{
+        legend:{display:true,position:'bottom',labels:{color:'#475569',font:{family:'Plus Jakarta Sans',size:11},padding:12}},
+        datalabels:{display:true,color:'#fff',font:{size:11,weight:'700'},
+          formatter:(v)=>total?(v/total*100).toFixed(0)+'%':''},
+        tooltip:{
+          backgroundColor:'#1e293b',borderColor:'#334155',borderWidth:1,
+          titleColor:'#94a3b8',bodyColor:'#f1f5f9',
+          titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},
+          padding:11,cornerRadius:8,
+          callbacks:{label:c=>{return ` ${fmt(c.raw)} (${total?(c.raw/total*100).toFixed(1):'0'}%)`;}}
+        }
+      }
+    }
+  });
 }
 
 function renderHourlyChart(){
   killCh('hourly');
   if(!rawHourly.length)return;
+  const metric=document.getElementById('hourly-metric').value;
+  const lbl=DEMO_LABELS[metric];
+  document.getElementById('hourly-ttl').textContent=`시간대별 ${lbl}`;
   const labels=rawHourly.map(d=>{
     const h=d.hourly_stats_aggregated_by_advertiser_time_zone||'';
-    const hNum=parseInt(h.split('-')[0]||'0');
-    return`${hNum}시`;
+    return`${parseInt(h.split('-')[0]||'0')}시`;
   });
-  const spends=rawHourly.map(d=>parseFloat(d.spend||0));
+  const vals=rawHourly.map(d=>demoVal(d,metric));
+  const fmt=DEMO_FMT[metric];
+  const maxV=Math.max(...vals);
   const o=baseOpts();
-  o.scales.y.ticks.callback=v=>fmtW(v);
-  o.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
+  o.scales.y.ticks.callback=fmt;
+  o.plugins.tooltip.callbacks={label:c=>' '+fmt(c.raw)};
   o.plugins.datalabels={display:false};
   ch.hourly=new Chart(document.getElementById('ch-hourly'),{type:'bar',
-    data:{labels,datasets:[{data:spends,backgroundColor:spends.map(v=>{
-      const max=Math.max(...spends);return v===max?'#2563eb':'rgba(37,99,235,0.35)';
-    }),borderRadius:4}]},options:o});
+    data:{labels,datasets:[{data:vals,backgroundColor:vals.map(v=>v===maxV?'#2563eb':'rgba(37,99,235,0.3)'),borderRadius:4}]},
+    options:o});
 }
 
 function renderAgeCTR(){
@@ -933,9 +1079,9 @@ function exportCSV(){exportTableCSV('campaign');}
 
 function exportTableCSV(type){
   let rows,hdr,data;
-  if(type==='campaign'){hdr=['캠페인명','상태',...MHDR];data=rawCamp.map(c=>[c.campaign_name||'',c.status||'',...buildMetricsRow(c)]);}
-  else if(type==='adset'){hdr=['캠페인','광고세트명','상태',...MHDR];data=rawAdset.map(a=>[a.campaign_name||'',a.adset_name||'',a.status||'',...buildMetricsRow(a)]);}
-  else if(type==='ad'){hdr=['캠페인','광고세트','광고명','상태',...MHDR];data=rawAd.map(a=>[a.campaign_name||'',a.adset_name||'',a.ad_name||'',a.status||'',...buildMetricsRow(a)]);}
+  if(type==='campaign'){hdr=['캠페인명',...MHDR];data=rawCamp.map(c=>[c.campaign_name||'',...buildMetricsRow(c)]);}
+  else if(type==='adset'){hdr=['캠페인','광고세트명',...MHDR];data=rawAdset.map(a=>[a.campaign_name||'',a.adset_name||'',...buildMetricsRow(a)]);}
+  else if(type==='ad'){hdr=['캠페인','광고세트','광고명',...MHDR];data=rawAd.map(a=>[a.campaign_name||'',a.adset_name||'',a.ad_name||'',...buildMetricsRow(a)]);}
   rows=[hdr,...data];
   const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
