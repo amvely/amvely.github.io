@@ -1,395 +1,469 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meta Ads Report</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #f5f6fa;
-      --surface: #ffffff;
-      --surface2: #f8f9fc;
-      --surface3: #eef0f6;
-      --border: #e4e7f0;
-      --border2: #d0d4e2;
-      --brand: #1a56db;
-      --brand-light: #eff4ff;
-      --brand-mid: #c7d7fc;
-      --green: #0e9f6e;
-      --green-light: #e8f7f0;
-      --red: #e02424;
-      --red-light: #fdf2f2;
-      --yellow: #c27803;
-      --yellow-light: #fdf6e3;
-      --purple: #7e3af2;
-      --purple-light: #f3eeff;
-      --text: #111827;
-      --text2: #4b5563;
-      --text3: #9ca3af;
-      --font: 'Plus Jakarta Sans', sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --radius: 14px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Meta Ads Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{
+  --bg:#f0f2f8;--surf:#fff;--surf2:#f7f8fc;--surf3:#eef0f8;
+  --bd:#e3e6f0;--bd2:#cdd2e8;
+  --brand:#2563eb;--brand-l:#eff4ff;--brand-m:#bfdbfe;
+  --green:#059669;--green-l:#ecfdf5;
+  --red:#dc2626;--red-l:#fef2f2;
+  --amber:#d97706;--amber-l:#fffbeb;
+  --purple:#7c3aed;--purple-l:#f5f3ff;
+  --pink:#db2777;--pink-l:#fdf2f8;
+  --tx:#0f172a;--tx2:#475569;--tx3:#94a3b8;
+  --font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --sh2:0 4px 24px rgba(0,0,0,.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);min-height:100vh}
 
-    /* HEADER */
-    header {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 64px; position: sticky; top: 0; z-index: 50;
-    }
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-icon { width: 32px; height: 32px; background: var(--brand); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; }
-    .logo-text { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
-    .logo-text span { color: var(--brand); }
-    .header-right { display: flex; align-items: center; gap: 10px; }
-    #last-updated { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-    .btn-sm { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); padding: 7px 14px; border-radius: 8px; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
-    .btn-sm:hover { background: var(--brand-light); border-color: var(--brand-mid); color: var(--brand); }
-    .btn-sm svg { width: 13px; height: 13px; }
+/* ── HEADER ── */
+header{background:var(--surf);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;position:sticky;top:0;z-index:60}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-icon{width:30px;height:30px;background:var(--brand);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.logo-txt{font-size:15px;font-weight:800;color:var(--tx)}
+.logo-txt span{color:var(--brand)}
+.hdr-r{display:flex;align-items:center;gap:8px}
+#last-upd{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+.btn{background:var(--surf2);border:1px solid var(--bd);color:var(--tx2);padding:6px 13px;border-radius:7px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.btn:hover{background:var(--brand-l);border-color:var(--brand-m);color:var(--brand)}
+.btn svg{width:12px;height:12px}
+.btn-blue{background:var(--brand);border:none;color:#fff}
+.btn-blue:hover{background:#1d4ed8;color:#fff}
 
-    /* LOADING */
-    #loading { display: none; position: fixed; inset: 0; background: rgba(245,246,250,0.9); z-index: 100; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
-    #loading.active { display: flex; }
-    .spinner { width: 40px; height: 40px; border: 3px solid var(--border2); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.75s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loading p { font-size: 13px; color: var(--text2); font-family: var(--mono); }
+/* ── LOADING ── */
+#loading{display:none;position:fixed;inset:0;background:rgba(240,242,248,.92);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#loading.on{display:flex}
+.spin{width:38px;height:38px;border:3px solid var(--bd2);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-size:13px;color:var(--tx2);font-family:var(--mono)}
 
-    /* SETUP */
-    #setup-panel { max-width: 680px; margin: 52px auto; padding: 0 20px; }
-    .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 44px; box-shadow: var(--shadow); }
-    .setup-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
-    .setup-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.5px; }
-    .setup-desc { color: var(--text2); font-size: 14px; line-height: 1.65; margin-bottom: 32px; }
-    .setup-desc a { color: var(--brand); text-decoration: none; font-weight: 600; }
-    .setup-desc a:hover { text-decoration: underline; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 12px; font-weight: 700; color: var(--text2); }
-    .form-group input, .form-group select { background: var(--surface2); border: 1.5px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; font-family: var(--mono); font-size: 13px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-    .form-group input:focus, .form-group select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(26,86,219,0.1); background: #fff; }
-    .btn-connect { width: 100%; padding: 14px; background: var(--brand); border: none; border-radius: 10px; color: #fff; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.15s; margin-top: 6px; }
-    .btn-connect:hover { background: #1648c4; box-shadow: 0 4px 16px rgba(26,86,219,0.3); }
-    .error-msg { display: none; margin-top: 14px; padding: 12px 16px; background: var(--red-light); border: 1px solid #fbd5d5; border-radius: 10px; color: var(--red); font-size: 13px; font-family: var(--mono); }
-    .hint-box { margin-top: 22px; padding: 16px 18px; background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: 10px; }
-    .hint-box p { font-size: 12.5px; color: var(--text2); line-height: 1.65; }
-    .hint-box strong { color: var(--brand); font-weight: 700; }
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--tx);color:#fff;border-radius:9px;padding:11px 17px;font-size:13px;font-weight:600;z-index:999;transform:translateY(60px);opacity:0;transition:all .25s;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+#toast.on{transform:translateY(0);opacity:1}
 
-    /* DASHBOARD */
-    #dashboard { display: none; padding: 28px 40px 60px; }
-    .controls-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .page-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; color: var(--text); }
-    .page-sub { font-size: 13px; color: var(--text3); margin-top: 2px; }
-    .controls-right { display: flex; align-items: center; gap: 8px; }
-    .status-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); font-weight: 600; }
-    .dot-live { width: 7px; height: 7px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-    .date-select { background: var(--surface); border: 1.5px solid var(--border); color: var(--text); padding: 7px 12px; border-radius: 8px; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; outline: none; }
+/* ── SETUP ── */
+#setup{max-width:660px;margin:48px auto;padding:0 20px}
+.setup-card{background:var(--surf);border:1px solid var(--bd);border-radius:18px;padding:40px;box-shadow:var(--sh)}
+.setup-ey{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
+.setup-ttl{font-size:24px;font-weight:800;color:var(--tx);margin-bottom:7px;letter-spacing:-.4px}
+.setup-desc{color:var(--tx2);font-size:13.5px;line-height:1.65;margin-bottom:28px}
+.setup-desc a{color:var(--brand);font-weight:700;text-decoration:none}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.fg label{font-size:11px;font-weight:800;color:var(--tx2);letter-spacing:.2px}
+.fg input,.fg select{background:var(--surf2);border:1.5px solid var(--bd);color:var(--tx);padding:10px 13px;border-radius:9px;font-family:var(--mono);font-size:13px;outline:none;width:100%;transition:border-color .15s,box-shadow .15s}
+.fg input:focus,.fg select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:#fff}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-connect{width:100%;padding:13px;background:var(--brand);border:none;border-radius:9px;color:#fff;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer;transition:all .15s;margin-top:4px}
+.btn-connect:hover{background:#1d4ed8;box-shadow:0 4px 16px rgba(37,99,235,.35)}
+.err{display:none;margin-top:12px;padding:11px 14px;background:var(--red-l);border:1px solid #fecaca;border-radius:9px;color:var(--red);font-size:12.5px;font-family:var(--mono)}
+.hint{margin-top:20px;padding:14px 16px;background:var(--brand-l);border:1px solid var(--brand-m);border-radius:9px}
+.hint p{font-size:12px;color:var(--tx2);line-height:1.65}
+.hint strong{color:var(--brand);font-weight:700}
 
-    /* SECTION */
-    .section-label { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; padding-left: 2px; }
-    .section-block { margin-bottom: 22px; }
+/* ── DASHBOARD ── */
+#dash{display:none;padding:24px 32px 60px}
 
-    /* KPI GRID */
-    .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 12px; }
-    @media(max-width:900px){ .kpi-grid { grid-template-columns: repeat(2,1fr); } }
-    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); transition: transform 0.15s, box-shadow 0.15s; }
-    .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-    .kpi-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-    .kpi-label { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.3px; text-transform: uppercase; }
-    .kpi-ico { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-    .kpi-val { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -0.8px; line-height: 1; margin-bottom: 6px; }
-    .kpi-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .kpi-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-    .kpi-tag { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 100px; font-family: var(--mono); font-size: 10px; font-weight: 600; }
-    .tag-blue { background: var(--brand-light); color: var(--brand); }
-    .tag-green { background: var(--green-light); color: var(--green); }
-    .tag-red { background: var(--red-light); color: var(--red); }
-    .tag-gray { background: var(--surface3); color: var(--text3); }
+/* Controls */
+.ctrl-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.pg-ttl{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.pg-sub{font-size:12px;color:var(--tx3);margin-top:1px}
+.ctrl-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.live-dot{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tx2);font-weight:600}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 5px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-    /* ROAS + CPM row */
-    .wide-kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .wide-kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
-    .wide-ico { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-    .wide-content { flex: 1; }
-    .wide-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
-    .wide-val { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--text); line-height: 1; margin-bottom: 4px; }
-    .wide-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-    .roas-bar-wrap { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-    .roas-bar { height: 100%; background: linear-gradient(90deg, var(--brand), var(--purple)); border-radius: 99px; transition: width 0.8s ease; }
+/* Date controls */
+.date-ctrl{display:flex;align-items:center;gap:6px;background:var(--surf);border:1.5px solid var(--bd);border-radius:9px;padding:5px 10px}
+.date-ctrl select{border:none;background:transparent;color:var(--tx);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;outline:none}
+#custom-dates{display:none;align-items:center;gap:6px}
+#custom-dates input{background:var(--surf2);border:1.5px solid var(--bd);color:var(--tx);padding:5px 9px;border-radius:7px;font-family:var(--mono);font-size:12px;outline:none}
+#custom-dates input:focus{border-color:var(--brand)}
 
-    /* CHARTS */
-    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
-    .card-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
-    .card-sub { font-size: 11px; color: var(--text3); margin-bottom: 16px; }
-    .charts-row { display: grid; grid-template-columns: 7fr 3fr; gap: 12px; margin-bottom: 12px; }
-    @media(max-width:900px){ .charts-row { grid-template-columns: 1fr; } }
-    .charts-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    @media(max-width:900px){ .charts-row3 { grid-template-columns: 1fr; } }
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;gap:2px;background:var(--surf);border:1px solid var(--bd);border-radius:10px;padding:4px;margin-bottom:20px;overflow-x:auto}
+.nav-tab{padding:7px 16px;border-radius:7px;border:none;background:transparent;color:var(--tx3);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-tab.on{background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.nav-tab:hover:not(.on){background:var(--surf3);color:var(--tx2)}
+.tab-panel{display:none}
+.tab-panel.on{display:block}
 
-    /* TREND TABS */
-    .tab-row { display: flex; gap: 3px; margin-bottom: 14px; }
-    .tab-btn { padding: 5px 11px; border-radius: 7px; border: 1px solid transparent; font-family: var(--font); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; background: transparent; color: var(--text3); }
-    .tab-btn.active { background: var(--brand-light); border-color: var(--brand-mid); color: var(--brand); }
-    .tab-btn:hover:not(.active) { background: var(--surface3); color: var(--text2); }
+/* ── SCORECARD ── */
+.score-label{font-size:10px;font-weight:800;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:10px}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--brand));opacity:.7}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kpi-lbl{font-size:10px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.3px}
+.kpi-ico{font-size:16px}
+.kpi-val{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.5px;line-height:1;margin-bottom:4px}
+.kpi-sub{font-family:var(--mono);font-size:10px;color:var(--tx3)}
 
-    /* DONUT LEGEND */
-    .legend-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-    .legend-row { display: flex; align-items: center; gap: 7px; }
-    .legend-color { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
-    .legend-name { font-size: 12px; color: var(--text2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .legend-amt { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-    .legend-pct { font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 600; min-width: 30px; text-align: right; }
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:10px;font-weight:800;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px;padding-left:1px}
+.sec{margin-bottom:20px}
 
-    /* TABLE */
-    .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-    .table-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 14px; border-bottom: 1px solid var(--border); }
-    .table-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    thead tr { background: var(--surface2); }
-    thead th { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; text-transform: uppercase; padding: 9px 14px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--border); }
-    thead th.r { text-align: right; }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--surface2); }
-    tbody td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: middle; }
-    .td-r { text-align: right; font-family: var(--mono); font-size: 12px; color: var(--text2); }
-    .td-rh { text-align: right; font-family: var(--mono); font-size: 12px; color: var(--text); font-weight: 600; }
-    .c-name { font-weight: 700; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .c-obj { font-size: 11px; color: var(--text3); margin-top: 1px; }
-    .s-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 100px; font-size: 11px; font-weight: 700; }
-    .s-active { background: var(--green-light); color: var(--green); }
-    .s-paused { background: var(--yellow-light); color: var(--yellow); }
-    .s-other { background: var(--surface3); color: var(--text3); }
-    .roas-pill { display: inline-block; padding: 3px 8px; border-radius: 6px; font-family: var(--mono); font-size: 11px; font-weight: 600; }
-    .rg { background: var(--green-light); color: var(--green); }
-    .rb { background: var(--brand-light); color: var(--brand); }
-    .rl { background: var(--red-light); color: var(--red); }
-    .bar-wrap { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 3px; min-width: 60px; }
-    .bar-fill { height: 100%; background: var(--brand); border-radius: 99px; }
-    .empty-state { padding: 48px; text-align: center; color: var(--text3); font-size: 14px; }
+/* ── CHART CARDS ── */
+.chart-card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh)}
+.cc-ttl{font-size:13px;font-weight:800;color:var(--tx);margin-bottom:2px}
+.cc-sub{font-size:11px;color:var(--tx3);margin-bottom:14px}
+.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.charts-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.charts-r7{display:grid;grid-template-columns:7fr 3fr;gap:12px}
+@media(max-width:900px){.charts-2,.charts-3,.charts-r7{grid-template-columns:1fr}}
 
-    /* TOAST */
-    #toast { position: fixed; bottom: 28px; right: 28px; background: var(--text); color: #fff; border-radius: 10px; padding: 12px 18px; font-size: 13px; font-weight: 600; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.25s; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    #toast.show { transform: translateY(0); opacity: 1; }
-  </style>
+/* Trend tabs */
+.t-tabs{display:flex;gap:3px;margin-bottom:12px;flex-wrap:wrap}
+.t-tab{padding:4px 10px;border-radius:6px;border:1px solid transparent;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;background:transparent;color:var(--tx3);font-family:var(--font)}
+.t-tab.on{background:var(--brand-l);border-color:var(--brand-m);color:var(--brand)}
+.t-tab:hover:not(.on){background:var(--surf3);color:var(--tx2)}
+
+/* Donut legend */
+.dl{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.dr{display:flex;align-items:center;gap:6px}
+.dc{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.dn{font-size:11px;color:var(--tx2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.da{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.dp{font-family:var(--mono);font-size:11px;color:var(--tx);font-weight:600;min-width:28px;text-align:right}
+
+/* ── TABLE ── */
+.tbl-card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.tbl-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bd)}
+.tbl-ttl{font-size:13px;font-weight:800;color:var(--tx)}
+.tbl-sub{font-size:11px;color:var(--tx3);margin-top:1px}
+.tbl-sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:var(--surf2)}
+thead th{font-size:10px;font-weight:800;color:var(--tx3);letter-spacing:.5px;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--bd)}
+thead th.r{text-align:right}
+tbody tr{border-bottom:1px solid var(--surf3);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surf2)}
+tbody td{padding:10px 12px;color:var(--tx);vertical-align:middle;white-space:nowrap}
+.td-r{text-align:right;font-family:var(--mono);color:var(--tx2)}
+.td-rh{text-align:right;font-family:var(--mono);color:var(--tx);font-weight:600}
+.td-br{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-n{font-size:11px;color:var(--tx3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.sbadge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:800}
+.sa{background:var(--green-l);color:var(--green)}
+.sp{background:var(--amber-l);color:var(--amber)}
+.so{background:var(--surf3);color:var(--tx3)}
+.rp{display:inline-block;padding:2px 7px;border-radius:5px;font-family:var(--mono);font-size:10px;font-weight:700}
+.rg{background:var(--green-l);color:var(--green)}
+.rb{background:var(--brand-l);color:var(--brand)}
+.rl{background:var(--red-l);color:var(--red)}
+.bw{height:3px;background:var(--bd);border-radius:99px;margin-top:3px;min-width:50px;overflow:hidden}
+.bf{height:100%;background:var(--brand);border-radius:99px}
+.empty{padding:40px;text-align:center;color:var(--tx3);font-size:13px}
+
+/* Demographic charts */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:900px){.demo-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
-<div id="loading"><div class="spinner"></div><p>Meta API에서 데이터 불러오는 중...</p></div>
+<div id="loading"><div class="spin"></div><p>Meta API에서 데이터 불러오는 중...</p></div>
 <div id="toast"></div>
 
 <header>
   <div class="logo">
     <div class="logo-icon">📊</div>
-    <div class="logo-text">Meta <span>Ads</span> Report</div>
+    <div class="logo-txt">Meta <span>Ads</span> Report</div>
   </div>
-  <div class="header-right">
-    <span id="last-updated"></span>
-    <button class="btn-sm" id="refresh-btn" style="display:none" onclick="refreshData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-      새로고침
+  <div class="hdr-r">
+    <span id="last-upd"></span>
+    <button class="btn" id="refresh-btn" style="display:none" onclick="refreshData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>새로고침
     </button>
-    <button class="btn-sm" id="export-btn" style="display:none" onclick="exportCSV()">⬇ CSV</button>
-    <button class="btn-sm" id="logout-btn" style="display:none" onclick="logout()">연결 해제</button>
+    <button class="btn" id="export-btn" style="display:none" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn" id="logout-btn" style="display:none" onclick="doLogout()">연결 해제</button>
   </div>
 </header>
 
 <!-- SETUP -->
-<div id="setup-panel">
+<div id="setup">
   <div class="setup-card">
-    <div class="setup-eyebrow">Meta Business API</div>
-    <div class="setup-title">광고 성과 리포트 연결</div>
+    <div class="setup-ey">Meta Business API</div>
+    <div class="setup-ttl">광고 성과 리포트 연결</div>
     <div class="setup-desc">
-      <a href="https://developers.facebook.com/tools/explorer/" target="_blank">Graph API Explorer</a>에서 발급한
-      액세스 토큰과 광고 계정 ID를 입력하세요.<br/>
-      토큰에 <strong>ads_read</strong>, <strong>read_insights</strong> 권한이 필요합니다.
+      <a href="https://developers.facebook.com/tools/explorer/" target="_blank">Graph API Explorer</a>에서
+      발급한 액세스 토큰과 광고 계정 ID를 입력하세요.<br/>
+      토큰 권한: <strong>ads_read</strong>, <strong>read_insights</strong>, <strong>ads_management</strong>
     </div>
+    <div class="fg"><label>액세스 토큰 (Access Token)</label><input type="password" id="inp-tok" placeholder="EAAxxxxxxxxxxxxx..."/></div>
     <div class="form-grid">
-      <div class="form-group" style="grid-column:1/-1">
-        <label>액세스 토큰 (Access Token)</label>
-        <input type="password" id="access-token" placeholder="EAAxxxxxxxxxxxxx..." autocomplete="off" />
-      </div>
-      <div class="form-group">
-        <label>광고 계정 ID</label>
-        <input type="text" id="account-id" placeholder="act_123456789" />
-      </div>
-      <div class="form-group">
-        <label>조회 기간</label>
-        <select id="date-preset">
+      <div class="fg"><label>광고 계정 ID</label><input type="text" id="inp-acct" placeholder="act_123456789 또는 숫자만"/></div>
+      <div class="fg"><label>조회 기간</label>
+        <select id="inp-date">
           <option value="last_7d">최근 7일</option>
           <option value="last_14d">최근 14일</option>
           <option value="last_30d" selected>최근 30일</option>
           <option value="last_90d">최근 90일</option>
           <option value="this_month">이번 달</option>
           <option value="last_month">지난 달</option>
+          <option value="custom">커스텀 기간</option>
         </select>
       </div>
     </div>
+    <div id="setup-custom" style="display:none;gap:10px;margin-bottom:12px" class="form-grid">
+      <div class="fg"><label>시작일</label><input type="date" id="inp-since"/></div>
+      <div class="fg"><label>종료일</label><input type="date" id="inp-until"/></div>
+    </div>
     <button class="btn-connect" onclick="connectAPI()">데이터 연결하기 →</button>
-    <div class="error-msg" id="error-msg"></div>
-    <div class="hint-box">
-      <p>
-        💡 <strong>토큰 발급:</strong> Meta for Developers → Graph API Explorer → Generate Access Token (권한: ads_read, read_insights)<br/>
-        💡 <strong>계정 ID:</strong> 비즈니스 관리자에서 확인, 숫자 앞에 <strong>act_</strong> 자동으로 붙여드립니다.<br/>
-        🔒 모든 데이터는 브라우저 내에서만 처리됩니다. GitHub Pages에 올리면 바로 사용 가능합니다.
-      </p>
+    <div class="err" id="err-msg"></div>
+    <div class="hint">
+      <p>💡 <strong>계정 ID:</strong> 비즈니스 관리자 → 광고 계정 → 숫자 ID (act_ 자동 추가)<br/>
+      💡 <strong>권한 오류 시:</strong> Graph API Explorer에서 ads_read + read_insights + ads_management 권한 추가 후 토큰 재발급<br/>
+      🔒 토큰은 브라우저 메모리에만 저장. GitHub Pages 업로드 후 바로 사용 가능</p>
     </div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
-  <div class="controls-bar">
+<div id="dash">
+  <!-- Controls -->
+  <div class="ctrl-bar">
     <div>
-      <div class="page-title">광고 성과 리포트</div>
-      <div class="page-sub" id="date-range-label">—</div>
+      <div class="pg-ttl">광고 성과 리포트</div>
+      <div class="pg-sub" id="date-lbl">—</div>
     </div>
-    <div class="controls-right">
-      <div class="status-dot"><div class="dot-live"></div><span id="account-label">연결됨</span></div>
-      <select class="date-select" id="dash-date-preset" onchange="refreshData()">
-        <option value="last_7d">최근 7일</option>
-        <option value="last_14d">최근 14일</option>
-        <option value="last_30d" selected>최근 30일</option>
-        <option value="last_90d">최근 90일</option>
-        <option value="this_month">이번 달</option>
-        <option value="last_month">지난 달</option>
-      </select>
+    <div class="ctrl-r">
+      <div class="live-dot"><div class="dot"></div><span id="acct-lbl">연결됨</span></div>
+      <div class="date-ctrl">
+        <select id="dash-date" onchange="onDateChange()">
+          <option value="last_7d">최근 7일</option>
+          <option value="last_14d">최근 14일</option>
+          <option value="last_30d" selected>최근 30일</option>
+          <option value="last_90d">최근 90일</option>
+          <option value="this_month">이번 달</option>
+          <option value="last_month">지난 달</option>
+          <option value="custom">커스텀</option>
+        </select>
+      </div>
+      <div id="custom-dates">
+        <input type="date" id="dash-since"/>
+        <span style="font-size:12px;color:var(--tx3)">~</span>
+        <input type="date" id="dash-until"/>
+        <button class="btn btn-blue" onclick="refreshData()">조회</button>
+      </div>
     </div>
   </div>
 
-  <!-- KPIs -->
-  <div class="section-block">
-    <div class="section-label">핵심 지표</div>
+  <!-- Scorecards -->
+  <div class="sec">
+    <div class="score-label">핵심 지표 요약</div>
     <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-top"><div class="kpi-label">노출수</div><div class="kpi-ico" style="background:var(--brand-light);color:var(--brand)">👁</div></div>
-        <div class="kpi-val" id="kpi-impressions">—</div>
-        <div class="kpi-meta"><div class="kpi-sub" id="kpi-reach-sub">도달 —</div><div class="kpi-tag tag-gray" id="kpi-freq">—</div></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-top"><div class="kpi-label">클릭수 / CTR</div><div class="kpi-ico" style="background:var(--yellow-light);color:var(--yellow)">🖱</div></div>
-        <div class="kpi-val" id="kpi-clicks">—</div>
-        <div class="kpi-meta"><div class="kpi-sub" id="kpi-ctr-sub">CTR —%</div></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-top"><div class="kpi-label">총 지출 / CPC</div><div class="kpi-ico" style="background:var(--red-light);color:var(--red)">💰</div></div>
-        <div class="kpi-val" id="kpi-spend">—</div>
-        <div class="kpi-meta"><div class="kpi-sub" id="kpi-cpc-sub">CPC —</div></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-top"><div class="kpi-label">전환수 / CVR</div><div class="kpi-ico" style="background:var(--green-light);color:var(--green)">✅</div></div>
-        <div class="kpi-val" id="kpi-conv">—</div>
-        <div class="kpi-meta"><div class="kpi-sub" id="kpi-cvr-sub">CVR —%</div><div class="kpi-tag tag-gray" id="kpi-cpa-tag">CPA —</div></div>
-      </div>
+      <div class="kpi" style="--kc:var(--red)"><div class="kpi-top"><div class="kpi-lbl">지출</div><div class="kpi-ico">💰</div></div><div class="kpi-val" id="k-spend">—</div><div class="kpi-sub" id="k-spend-s">—</div></div>
+      <div class="kpi" style="--kc:var(--brand)"><div class="kpi-top"><div class="kpi-lbl">노출수</div><div class="kpi-ico">👁</div></div><div class="kpi-val" id="k-imp">—</div><div class="kpi-sub" id="k-imp-s">—</div></div>
+      <div class="kpi" style="--kc:var(--amber)"><div class="kpi-top"><div class="kpi-lbl">클릭수</div><div class="kpi-ico">🖱</div></div><div class="kpi-val" id="k-clk">—</div><div class="kpi-sub" id="k-clk-s">—</div></div>
+      <div class="kpi" style="--kc:var(--green)"><div class="kpi-top"><div class="kpi-lbl">CTR</div><div class="kpi-ico">📊</div></div><div class="kpi-val" id="k-ctr">—</div><div class="kpi-sub" id="k-ctr-s">—</div></div>
+      <div class="kpi" style="--kc:var(--purple)"><div class="kpi-top"><div class="kpi-lbl">CPC</div><div class="kpi-ico">💵</div></div><div class="kpi-val" id="k-cpc">—</div><div class="kpi-sub" id="k-cpc-s">—</div></div>
+      <div class="kpi" style="--kc:var(--pink)"><div class="kpi-top"><div class="kpi-lbl">CPM</div><div class="kpi-ico">🔢</div></div><div class="kpi-val" id="k-cpm">—</div><div class="kpi-sub" id="k-cpm-s">—</div></div>
     </div>
-    <div class="wide-kpi-row">
-      <div class="wide-kpi">
-        <div class="wide-ico" style="background:var(--purple-light);color:var(--purple)">📈</div>
-        <div class="wide-content">
-          <div class="wide-label">광고 수익률 (ROAS)</div>
-          <div class="wide-val" id="kpi-roas">—</div>
-          <div class="wide-sub" id="kpi-revenue-sub">전환 매출 —</div>
-          <div class="roas-bar-wrap"><div class="roas-bar" id="roas-bar" style="width:0%"></div></div>
+    <div class="kpi-grid">
+      <div class="kpi" style="--kc:var(--green)"><div class="kpi-top"><div class="kpi-lbl">전환수</div><div class="kpi-ico">✅</div></div><div class="kpi-val" id="k-conv">—</div><div class="kpi-sub" id="k-conv-s">—</div></div>
+      <div class="kpi" style="--kc:var(--amber)"><div class="kpi-top"><div class="kpi-lbl">CVR</div><div class="kpi-ico">🎯</div></div><div class="kpi-val" id="k-cvr">—</div><div class="kpi-sub" id="k-cvr-s">—</div></div>
+      <div class="kpi" style="--kc:var(--red)"><div class="kpi-top"><div class="kpi-lbl">CPA</div><div class="kpi-ico">🏷</div></div><div class="kpi-val" id="k-cpa">—</div><div class="kpi-sub" id="k-cpa-s">—</div></div>
+      <div class="kpi" style="--kc:var(--purple)"><div class="kpi-top"><div class="kpi-lbl">ROAS</div><div class="kpi-ico">📈</div></div><div class="kpi-val" id="k-roas">—</div><div class="kpi-sub" id="k-roas-s">—</div></div>
+      <div class="kpi" style="--kc:var(--brand)"><div class="kpi-top"><div class="kpi-lbl">도달수</div><div class="kpi-ico">📡</div></div><div class="kpi-val" id="k-reach">—</div><div class="kpi-sub" id="k-reach-s">—</div></div>
+      <div class="kpi" style="--kc:var(--pink)"><div class="kpi-top"><div class="kpi-lbl">빈도</div><div class="kpi-ico">🔁</div></div><div class="kpi-val" id="k-freq">—</div><div class="kpi-sub" id="k-freq-s">—</div></div>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab on" onclick="switchTab('overview',this)">📊 개요</button>
+    <button class="nav-tab" onclick="switchTab('daily',this)">📅 일별 데이터</button>
+    <button class="nav-tab" onclick="switchTab('campaign',this)">🗂 캠페인</button>
+    <button class="nav-tab" onclick="switchTab('adset',this)">📁 광고세트</button>
+    <button class="nav-tab" onclick="switchTab('ad',this)">📄 광고</button>
+    <button class="nav-tab" onclick="switchTab('demo',this)">👥 인구통계</button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-panel on" id="tab-overview">
+    <div class="sec">
+      <div class="sec-lbl">성과 추이</div>
+      <div class="charts-r7" style="margin-bottom:12px">
+        <div class="chart-card">
+          <div class="cc-ttl">일별 성과 트렌드</div>
+          <div class="cc-sub" style="margin-bottom:10px">Daily Performance</div>
+          <div class="t-tabs" id="trend-tabs">
+            <button class="t-tab on" onclick="switchTrend('spend',this)">지출</button>
+            <button class="t-tab" onclick="switchTrend('impressions',this)">노출수</button>
+            <button class="t-tab" onclick="switchTrend('clicks',this)">클릭수</button>
+            <button class="t-tab" onclick="switchTrend('ctr',this)">CTR</button>
+            <button class="t-tab" onclick="switchTrend('cpc',this)">CPC</button>
+            <button class="t-tab" onclick="switchTrend('roas',this)">ROAS</button>
+          </div>
+          <div style="position:relative;height:240px"><canvas id="ch-trend"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-ttl">캠페인별 지출</div>
+          <div class="cc-sub">Spend by Campaign</div>
+          <div style="position:relative;height:150px"><canvas id="ch-donut"></canvas></div>
+          <div class="dl" id="donut-leg"></div>
         </div>
       </div>
-      <div class="wide-kpi">
-        <div class="wide-ico" style="background:var(--yellow-light);color:var(--yellow)">🎯</div>
-        <div class="wide-content">
-          <div class="wide-label">CPM / 도달당 비용</div>
-          <div class="wide-val" id="kpi-cpm">—</div>
-          <div class="wide-sub" id="kpi-cpreach-sub">도달당 비용 —</div>
+      <div class="charts-3">
+        <div class="chart-card">
+          <div class="cc-ttl">CTR 추이</div><div class="cc-sub">Click-Through Rate</div>
+          <div style="position:relative;height:150px"><canvas id="ch-ctr"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-ttl">CPC 추이</div><div class="cc-sub">Cost Per Click</div>
+          <div style="position:relative;height:150px"><canvas id="ch-cpc"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-ttl">ROAS 추이</div><div class="cc-sub">Return on Ad Spend</div>
+          <div style="position:relative;height:150px"><canvas id="ch-roas"></canvas></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Trend + Donut -->
-  <div class="section-block">
-    <div class="section-label">성과 추이</div>
-    <div class="charts-row">
+  <!-- TAB: DAILY -->
+  <div class="tab-panel" id="tab-daily">
+    <div class="sec">
+      <div class="sec-lbl">일별 상세 데이터</div>
+      <div class="tbl-card">
+        <div class="tbl-hdr">
+          <div><div class="tbl-ttl">일별 성과</div><div class="tbl-sub">날짜별 광고 계정 전체 집계</div></div>
+          <button class="btn" onclick="exportDailyCSV()">⬇ CSV</button>
+        </div>
+        <div class="tbl-sc"><div id="daily-tbl"><div class="empty">데이터 로딩 중...</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CAMPAIGN -->
+  <div class="tab-panel" id="tab-campaign">
+    <div class="sec">
+      <div class="sec-lbl">캠페인별 성과 비교</div>
+      <div class="tbl-card">
+        <div class="tbl-hdr">
+          <div><div class="tbl-ttl">캠페인 성과</div><div class="tbl-sub" id="camp-cnt"></div></div>
+          <button class="btn" onclick="exportTableCSV('campaign')">⬇ CSV</button>
+        </div>
+        <div class="tbl-sc"><div id="camp-tbl"><div class="empty">데이터 로딩 중...</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ADSET -->
+  <div class="tab-panel" id="tab-adset">
+    <div class="sec">
+      <div class="sec-lbl">광고세트별 성과 비교</div>
+      <div class="tbl-card">
+        <div class="tbl-hdr">
+          <div><div class="tbl-ttl">광고세트 성과</div><div class="tbl-sub" id="adset-cnt"></div></div>
+          <button class="btn" onclick="exportTableCSV('adset')">⬇ CSV</button>
+        </div>
+        <div class="tbl-sc"><div id="adset-tbl"><div class="empty">데이터 로딩 중...</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: AD -->
+  <div class="tab-panel" id="tab-ad">
+    <div class="sec">
+      <div class="sec-lbl">광고별 성과 비교</div>
+      <div class="tbl-card">
+        <div class="tbl-hdr">
+          <div><div class="tbl-ttl">광고 성과</div><div class="tbl-sub" id="ad-cnt"></div></div>
+          <button class="btn" onclick="exportTableCSV('ad')">⬇ CSV</button>
+        </div>
+        <div class="tbl-sc"><div id="ad-tbl"><div class="empty">데이터 로딩 중...</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: DEMO -->
+  <div class="tab-panel" id="tab-demo">
+    <div class="sec">
+      <div class="sec-lbl">인구통계 분석</div>
+      <div class="demo-grid">
+        <div class="chart-card">
+          <div class="cc-ttl">연령대별 지출</div><div class="cc-sub">Age Group Spend</div>
+          <div style="position:relative;height:220px"><canvas id="ch-age"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-ttl">성별 성과</div><div class="cc-sub">Gender Performance</div>
+          <div style="position:relative;height:220px"><canvas id="ch-gender"></canvas></div>
+        </div>
+      </div>
       <div class="chart-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
-          <div><div class="card-title">일별 성과 트렌드</div><div class="card-sub">날짜별 데이터</div></div>
-          <div class="tab-row" style="margin-bottom:0">
-            <button class="tab-btn active" onclick="switchTrend('impressions',this)">노출</button>
-            <button class="tab-btn" onclick="switchTrend('clicks',this)">클릭</button>
-            <button class="tab-btn" onclick="switchTrend('spend',this)">지출</button>
-            <button class="tab-btn" onclick="switchTrend('ctr',this)">CTR</button>
-            <button class="tab-btn" onclick="switchTrend('roas',this)">ROAS</button>
+        <div class="cc-ttl">시간대별 지출</div><div class="cc-sub">Hourly Spend (광고주 시간대 기준)</div>
+        <div style="position:relative;height:220px"><canvas id="ch-hourly"></canvas></div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="charts-2">
+          <div class="chart-card">
+            <div class="cc-ttl">연령대별 CTR</div><div class="cc-sub">Age Group CTR</div>
+            <div style="position:relative;height:180px"><canvas id="ch-age-ctr"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="cc-ttl">연령대별 CPC</div><div class="cc-sub">Age Group CPC</div>
+            <div style="position:relative;height:180px"><canvas id="ch-age-cpc"></canvas></div>
           </div>
         </div>
-        <div style="position:relative;height:250px"><canvas id="trendChart"></canvas></div>
       </div>
-      <div class="chart-card">
-        <div class="card-title">캠페인별 지출</div>
-        <div class="card-sub">지출 비중</div>
-        <div style="position:relative;height:150px"><canvas id="donutChart"></canvas></div>
-        <div class="legend-list" id="donut-legend"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mini Charts -->
-  <div class="section-block">
-    <div class="section-label">지표 분석</div>
-    <div class="charts-row3">
-      <div class="chart-card">
-        <div class="card-title">CTR 추이</div><div class="card-sub">Click-Through Rate</div>
-        <div style="position:relative;height:150px"><canvas id="ctrChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="card-title">CPC 추이</div><div class="card-sub">Cost Per Click</div>
-        <div style="position:relative;height:150px"><canvas id="cpcChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="card-title">ROAS 추이</div><div class="card-sub">Return on Ad Spend</div>
-        <div style="position:relative;height:150px"><canvas id="roasChart"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Campaign Table -->
-  <div class="section-block">
-    <div class="section-label">캠페인별 성과 비교</div>
-    <div class="table-card">
-      <div class="table-header">
-        <div><div class="card-title">캠페인 브레이크다운</div><div class="card-sub">지출 기준 내림차순</div></div>
-        <div style="font-family:var(--mono);font-size:12px;color:var(--text3)" id="camp-count"></div>
-      </div>
-      <div class="table-scroll"><div id="table-container"><div class="empty-state">데이터 로딩 중...</div></div></div>
     </div>
   </div>
 </div>
 
 <script>
-/* ── State ── */
-let TOKEN='', ACCOUNT_ID='', rawDaily=[], rawCampaigns=[], currentMetric='impressions';
+/* ─── Register DatalabelsPlugin globally but default display:false ─── */
+Chart.register(ChartDataLabels);
+Chart.defaults.plugins.datalabels.display = false;
+
+/* ─── State ─── */
+let TOK='', ACCT='';
+let rawDaily=[], rawCamp=[], rawAdset=[], rawAd=[], rawAge=[], rawGender=[], rawHourly=[];
 const ch={};
+let curTrend='spend';
 const CONV=['offsite_conversion.fb_pixel_purchase','purchase','lead','complete_registration'];
-const PAL=['#1a56db','#0e9f6e','#7e3af2','#c27803','#e02424','#60c4ff','#f7c948'];
+const PAL=['#2563eb','#059669','#7c3aed','#d97706','#dc2626','#db2777','#0891b2','#65a30d'];
 
-/* ── Format ── */
-const fmt=(n,d=0)=>{if(n==null||isNaN(n))return'—';n=parseFloat(n);if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e4)return(n/1e3).toFixed(1)+'K';return n.toLocaleString('ko-KR',{maximumFractionDigits:d});};
-const fmtW=n=>{if(!n||isNaN(n))return'—';const v=parseFloat(n);if(v>=1e6)return'₩'+(v/1e6).toFixed(2)+'M';if(v>=1e3)return'₩'+(v/1e3).toFixed(0)+'K';return'₩'+Math.round(v).toLocaleString('ko-KR');};
-const fmtPct=n=>n?parseFloat(n).toFixed(2)+'%':'0.00%';
-const fmtDate=s=>{const[,m,d]=s.split('-');return`${m}/${d}`;};
-const sum=(a,k)=>a.reduce((s,d)=>s+parseFloat(d[k]||0),0);
-const actSum=(a,types)=>{let t=0;a.forEach(d=>(d.actions||[]).forEach(x=>{if(types.includes(x.action_type))t+=parseFloat(x.value||0);}));return t;};
-const valSum=(a,types)=>{let t=0;a.forEach(d=>(d.action_values||[]).forEach(x=>{if(types.includes(x.action_type))t+=parseFloat(x.value||0);}));return t;};
+/* ─── Formatters ─── */
+const fmtN=n=>{if(n==null||isNaN(n)||n==='')return'—';return Math.round(parseFloat(n)).toLocaleString('ko-KR');};
+const fmtW=n=>{if(!n||isNaN(n))return'—';const v=parseFloat(n);return'₩'+Math.round(v).toLocaleString('ko-KR');};
+const fmtPct=n=>n?parseFloat(n).toFixed(2)+'%':'—';
+const fmtF=n=>n?parseFloat(n).toFixed(2):'—';
+const fmtDate=s=>{const[,m,d]=s.split('-');return`${parseInt(m)}/${parseInt(d)}`;};
+const S=(a,k)=>a.reduce((s,d)=>s+parseFloat(d[k]||0),0);
+const actS=(a,types)=>{let t=0;a.forEach(d=>(d.actions||[]).forEach(x=>{if(types.includes(x.action_type))t+=parseFloat(x.value||0);}));return t;};
+const valS=(a,types)=>{let t=0;a.forEach(d=>(d.action_values||[]).forEach(x=>{if(types.includes(x.action_type))t+=parseFloat(x.value||0);}));return t;};
 
-const showLoading=v=>document.getElementById('loading').classList.toggle('active',v);
-const toast=(msg,d=3000)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);};
-const showError=msg=>{const e=document.getElementById('error-msg');e.style.display=msg?'block':'none';e.textContent=msg;};
-const killChart=id=>{if(ch[id]){ch[id].destroy();delete ch[id];}};
+/* ─── UI helpers ─── */
+const showLoad=v=>document.getElementById('loading').classList.toggle('on',v);
+const toast=(msg,d=3000)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),d);};
+const showErr=msg=>{const e=document.getElementById('err-msg');e.style.display=msg?'block':'none';e.textContent=msg;};
+const killCh=id=>{if(ch[id]){ch[id].destroy();delete ch[id];}};
 
+/* ─── Date helpers ─── */
 function getRange(){
-  const v=document.getElementById('dashboard').style.display!=='none'?document.getElementById('dash-date-preset').value:document.getElementById('date-preset').value;
+  const v=document.getElementById('dash').style.display!=='none'
+    ?document.getElementById('dash-date').value
+    :document.getElementById('inp-date').value;
+  if(v==='custom'){
+    const s=document.getElementById(document.getElementById('dash').style.display!=='none'?'dash-since':'inp-since').value;
+    const u=document.getElementById(document.getElementById('dash').style.display!=='none'?'dash-until':'inp-until').value;
+    if(s&&u)return{since:s,until:u};
+  }
   const now=new Date(),f=d=>d.toISOString().slice(0,10);
   if(v==='last_7d')return{since:f(new Date(now-6*864e5)),until:f(now)};
   if(v==='last_14d')return{since:f(new Date(now-13*864e5)),until:f(now)};
@@ -400,10 +474,21 @@ function getRange(){
   return{since:f(new Date(now-29*864e5)),until:f(now)};
 }
 
-const BASE='https://graph.facebook.com/v19.0';
-async function api(path,params={}){
-  const u=new URL(BASE+path);
-  u.searchParams.set('access_token',TOKEN);
+/* ─── Setup date listeners ─── */
+document.getElementById('inp-date').addEventListener('change',e=>{
+  document.getElementById('setup-custom').style.display=e.target.value==='custom'?'grid':'none';
+});
+function onDateChange(){
+  const v=document.getElementById('dash-date').value;
+  document.getElementById('custom-dates').style.display=v==='custom'?'flex':'none';
+  if(v!=='custom')refreshData();
+}
+
+/* ─── API ─── */
+const GBASE='https://graph.facebook.com/v19.0';
+async function gapi(path,params={}){
+  const u=new URL(GBASE+path);
+  u.searchParams.set('access_token',TOK);
   Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,typeof v==='object'?JSON.stringify(v):v));
   const r=await fetch(u.toString());
   const d=await r.json();
@@ -411,191 +496,464 @@ async function api(path,params={}){
   return d;
 }
 
+async function gapiAll(path,params={}){
+  let all=[],url=null;
+  const first=await gapi(path,{...params,limit:500});
+  all=all.concat(first.data||[]);
+  url=first.paging?.next||null;
+  while(url){
+    const r=await fetch(url);const d=await r.json();
+    if(d.error)break;
+    all=all.concat(d.data||[]);
+    url=d.paging?.next||null;
+  }
+  return all;
+}
+
+/* ─── Connect ─── */
 async function connectAPI(){
-  let tok=document.getElementById('access-token').value.trim();
-  let acct=document.getElementById('account-id').value.trim();
-  if(!tok){showError('액세스 토큰을 입력해주세요.');return;}
-  if(!acct){showError('광고 계정 ID를 입력해주세요.');return;}
+  let tok=document.getElementById('inp-tok').value.trim();
+  let acct=document.getElementById('inp-acct').value.trim();
+  if(!tok){showErr('액세스 토큰을 입력해주세요.');return;}
+  if(!acct){showErr('광고 계정 ID를 입력해주세요.');return;}
   if(!acct.startsWith('act_'))acct='act_'+acct;
-  TOKEN=tok;ACCOUNT_ID=acct;showError('');showLoading(true);
+  TOK=tok;ACCT=acct;showErr('');showLoad(true);
   try{
     await loadAll();
-    document.getElementById('setup-panel').style.display='none';
-    document.getElementById('dashboard').style.display='block';
+    document.getElementById('setup').style.display='none';
+    document.getElementById('dash').style.display='block';
     ['refresh-btn','export-btn','logout-btn'].forEach(id=>document.getElementById(id).style.display='flex');
-    document.getElementById('account-label').textContent=acct;
-    document.getElementById('dash-date-preset').value=document.getElementById('date-preset').value;
-    document.getElementById('last-updated').textContent='업데이트: '+new Date().toLocaleTimeString('ko-KR');
-  }catch(e){showError('오류: '+e.message);TOKEN='';ACCOUNT_ID='';}
-  finally{showLoading(false);}
+    document.getElementById('acct-lbl').textContent=acct;
+    document.getElementById('dash-date').value=document.getElementById('inp-date').value;
+    document.getElementById('last-upd').textContent='업데이트: '+new Date().toLocaleTimeString('ko-KR');
+  }catch(e){showErr('오류: '+e.message);TOK='';ACCT='';}
+  finally{showLoad(false);}
 }
 
 async function refreshData(){
-  if(!TOKEN)return;showLoading(true);
-  try{await loadAll();document.getElementById('last-updated').textContent='업데이트: '+new Date().toLocaleTimeString('ko-KR');toast('✅ 업데이트 완료');}
-  catch(e){toast('❌ '+e.message);}finally{showLoading(false);}
+  if(!TOK)return;showLoad(true);
+  try{await loadAll();document.getElementById('last-upd').textContent='업데이트: '+new Date().toLocaleTimeString('ko-KR');toast('✅ 데이터 업데이트 완료');}
+  catch(e){toast('❌ '+e.message);}finally{showLoad(false);}
 }
 
-function logout(){
-  TOKEN='';ACCOUNT_ID='';
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('setup-panel').style.display='block';
+function doLogout(){
+  TOK='';ACCT='';
+  document.getElementById('dash').style.display='none';
+  document.getElementById('setup').style.display='block';
   ['refresh-btn','export-btn','logout-btn'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('last-updated').textContent='';
-  Object.keys(ch).forEach(killChart);
+  document.getElementById('last-upd').textContent='';
+  Object.keys(ch).forEach(killCh);
 }
 
+/* ─── Load All Data ─── */
 async function loadAll(){
   const{since,until}=getRange();
-  const fields='impressions,clicks,spend,ctr,cpc,cpm,actions,action_values,reach,frequency';
-  const[dr,cr]=await Promise.all([
-    api(`/${ACCOUNT_ID}/insights`,{fields,time_increment:1,level:'account',time_range:{since,until}}),
-    api(`/${ACCOUNT_ID}/campaigns`,{fields:`id,name,status,objective,insights.time_range({"since":"${since}","until":"${until}"}).fields(${fields})`,limit:50})
+  document.getElementById('date-lbl').textContent=`${since} ~ ${until}`;
+  const F='impressions,clicks,spend,ctr,cpc,cpm,actions,action_values,reach,frequency';
+  const TR={since,until};
+
+  // All in parallel
+  const[dRes,cRes,asRes,aRes,ageRes,genRes,hrRes]=await Promise.all([
+    gapi(`/${ACCT}/insights`,{fields:F,time_increment:1,level:'account',time_range:TR,limit:500}),
+    gapiAll(`/${ACCT}/insights`,{fields:F+',campaign_name,campaign_id',level:'campaign',time_range:TR}),
+    gapiAll(`/${ACCT}/insights`,{fields:F+',campaign_name,adset_name,adset_id',level:'adset',time_range:TR}),
+    gapiAll(`/${ACCT}/insights`,{fields:F+',campaign_name,adset_name,ad_name,ad_id',level:'ad',time_range:TR}),
+    gapi(`/${ACCT}/insights`,{fields:F,breakdowns:'age',time_range:TR,limit:100}).catch(()=>({data:[]})),
+    gapi(`/${ACCT}/insights`,{fields:F,breakdowns:'gender',time_range:TR,limit:100}).catch(()=>({data:[]})),
+    gapi(`/${ACCT}/insights`,{fields:F,breakdowns:'hourly_stats_aggregated_by_advertiser_time_zone',time_range:TR,limit:200}).catch(()=>({data:[]})),
   ]);
-  rawDaily=(dr.data||[]).sort((a,b)=>a.date_start.localeCompare(b.date_start));
-  rawCampaigns=cr.data||[];
-  const r=getRange();
-  document.getElementById('date-range-label').textContent=`${r.since} ~ ${r.until}`;
-  updateKPIs();renderTrend();renderDonut();renderMini();renderTable();
+
+  rawDaily=(dRes.data||[]).sort((a,b)=>a.date_start.localeCompare(b.date_start));
+  rawCamp=cRes.sort((a,b)=>parseFloat(b.spend||0)-parseFloat(a.spend||0));
+  rawAdset=asRes.sort((a,b)=>parseFloat(b.spend||0)-parseFloat(a.spend||0));
+  rawAd=aRes.sort((a,b)=>parseFloat(b.spend||0)-parseFloat(a.spend||0));
+  rawAge=ageRes.data||[];
+  rawGender=genRes.data||[];
+  rawHourly=(hrRes.data||[]).sort((a,b)=>{
+    const ha=parseInt((a.hourly_stats_aggregated_by_advertiser_time_zone||'').split('-')[0]||0);
+    const hb=parseInt((b.hourly_stats_aggregated_by_advertiser_time_zone||'').split('-')[0]||0);
+    return ha-hb;
+  });
+
+  updateKPIs();
+  renderOverview();
+  renderDailyTable();
+  renderCampTable();
+  renderAdsetTable();
+  renderAdTable();
+  renderDemo();
 }
 
+/* ─── KPIs ─── */
 function updateKPIs(){
-  const imp=sum(rawDaily,'impressions'),clicks=sum(rawDaily,'clicks'),spend=sum(rawDaily,'spend');
-  const reach=sum(rawDaily,'reach'),conv=actSum(rawDaily,CONV),revenue=valSum(rawDaily,CONV);
+  const imp=S(rawDaily,'impressions'),clicks=S(rawDaily,'clicks'),spend=S(rawDaily,'spend');
+  const reach=S(rawDaily,'reach'),conv=actS(rawDaily,CONV),revenue=valS(rawDaily,CONV);
   const ctr=imp?clicks/imp*100:0,cpc=clicks?spend/clicks:0,cpm=imp?spend/imp*1000:0;
   const cvr=clicks?conv/clicks*100:0,cpa=conv?spend/conv:0,roas=spend?revenue/spend:0;
-  const freq=reach?imp/reach:0,cpreach=reach?spend/reach:0;
-  document.getElementById('kpi-impressions').textContent=fmt(imp);
-  document.getElementById('kpi-reach-sub').textContent='도달 '+fmt(reach);
-  document.getElementById('kpi-freq').textContent='빈도 '+freq.toFixed(1)+'x';
-  document.getElementById('kpi-clicks').textContent=fmt(clicks);
-  document.getElementById('kpi-ctr-sub').textContent='CTR '+ctr.toFixed(2)+'%';
-  document.getElementById('kpi-spend').textContent=fmtW(spend);
-  document.getElementById('kpi-cpc-sub').textContent='CPC '+fmtW(cpc);
-  document.getElementById('kpi-conv').textContent=fmt(conv);
-  document.getElementById('kpi-cvr-sub').textContent='CVR '+cvr.toFixed(2)+'%';
-  document.getElementById('kpi-cpa-tag').textContent='CPA '+fmtW(cpa);
-  document.getElementById('kpi-roas').textContent=roas>0?roas.toFixed(2)+'x':'—';
-  document.getElementById('kpi-revenue-sub').textContent='전환 매출 '+fmtW(revenue);
-  document.getElementById('kpi-cpm').textContent=fmtW(cpm);
-  document.getElementById('kpi-cpreach-sub').textContent='도달당 비용 '+fmtW(cpreach);
-  document.getElementById('roas-bar').style.width=Math.min(roas/10*100,100)+'%';
+  const freq=reach?imp/reach:0;
+  document.getElementById('k-spend').textContent=fmtW(spend);
+  document.getElementById('k-spend-s').textContent='총 광고 지출';
+  document.getElementById('k-imp').textContent=fmtN(imp);
+  document.getElementById('k-imp-s').textContent='총 노출 횟수';
+  document.getElementById('k-clk').textContent=fmtN(clicks);
+  document.getElementById('k-clk-s').textContent='총 클릭 횟수';
+  document.getElementById('k-ctr').textContent=ctr.toFixed(2)+'%';
+  document.getElementById('k-ctr-s').textContent='클릭률';
+  document.getElementById('k-cpc').textContent=fmtW(cpc);
+  document.getElementById('k-cpc-s').textContent='클릭당 비용';
+  document.getElementById('k-cpm').textContent=fmtW(cpm);
+  document.getElementById('k-cpm-s').textContent='1,000회 노출당 비용';
+  document.getElementById('k-conv').textContent=fmtN(conv);
+  document.getElementById('k-conv-s').textContent='전환 이벤트 수';
+  document.getElementById('k-cvr').textContent=cvr.toFixed(2)+'%';
+  document.getElementById('k-cvr-s').textContent='전환율';
+  document.getElementById('k-cpa').textContent=fmtW(cpa);
+  document.getElementById('k-cpa-s').textContent='전환당 비용';
+  document.getElementById('k-roas').textContent=roas>0?roas.toFixed(2)+'x':'—';
+  document.getElementById('k-roas-s').textContent=`전환매출 ${fmtW(revenue)}`;
+  document.getElementById('k-reach').textContent=fmtN(reach);
+  document.getElementById('k-reach-s').textContent='순 도달 사용자';
+  document.getElementById('k-freq').textContent=freq.toFixed(2);
+  document.getElementById('k-freq-s').textContent='1인당 평균 노출';
 }
 
-const BASE_OPTS=()=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#e4e7f0',borderWidth:1,titleColor:'#9ca3af',bodyColor:'#111827',titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:12},padding:12,cornerRadius:8}},scales:{x:{grid:{color:'#f3f4f6',drawBorder:false},ticks:{color:'#9ca3af',font:{family:'JetBrains Mono',size:10},maxTicksLimit:8}},y:{grid:{color:'#f3f4f6',drawBorder:false},ticks:{color:'#9ca3af',font:{family:'JetBrains Mono',size:10}}}}});
+/* ─── Chart Defaults ─── */
+function baseOpts(extra={}){
+  return{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      datalabels:{display:false},
+      tooltip:{backgroundColor:'#fff',borderColor:'#e3e6f0',borderWidth:1,titleColor:'#94a3b8',bodyColor:'#0f172a',titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},padding:11,cornerRadius:8}
+    },
+    scales:{
+      x:{grid:{color:'#f1f5f9',drawBorder:false},ticks:{color:'#94a3b8',font:{family:'JetBrains Mono',size:10},maxTicksLimit:10}},
+      y:{grid:{color:'#f1f5f9',drawBorder:false},ticks:{color:'#94a3b8',font:{family:'JetBrains Mono',size:10}}}
+    },
+    ...extra
+  };
+}
 
+/* ─── OVERVIEW ─── */
 const TMETA={
-  impressions:{color:'#1a56db',fmt:v=>fmt(v),tip:v=>fmt(v)},
-  clicks:{color:'#c27803',fmt:v=>fmt(v),tip:v=>fmt(v)},
-  spend:{color:'#e02424',fmt:v=>fmtW(v),tip:v=>fmtW(v)},
-  ctr:{color:'#0e9f6e',fmt:v=>v.toFixed(2)+'%',tip:v=>v.toFixed(2)+'%'},
-  roas:{color:'#7e3af2',fmt:v=>v.toFixed(2)+'x',tip:v=>v.toFixed(2)+'x'},
+  spend:{color:'#dc2626',lbl:'지출',fmt:v=>fmtW(v),tfmt:v=>fmtW(v),get:d=>parseFloat(d.spend||0)},
+  impressions:{color:'#2563eb',lbl:'노출수',fmt:v=>fmtN(v),tfmt:v=>fmtN(v),get:d=>parseFloat(d.impressions||0)},
+  clicks:{color:'#d97706',lbl:'클릭수',fmt:v=>fmtN(v),tfmt:v=>fmtN(v),get:d=>parseFloat(d.clicks||0)},
+  ctr:{color:'#059669',lbl:'CTR',fmt:v=>v.toFixed(2)+'%',tfmt:v=>v.toFixed(2)+'%',get:d=>parseFloat(d.ctr||0)},
+  cpc:{color:'#7c3aed',lbl:'CPC',fmt:v=>fmtW(v),tfmt:v=>fmtW(v),get:d=>parseFloat(d.cpc||0)},
+  roas:{color:'#0891b2',lbl:'ROAS',fmt:v=>v.toFixed(2)+'x',tfmt:v=>v.toFixed(2)+'x',
+    get:d=>{const s=parseFloat(d.spend||0);const r=(d.action_values||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);return s?r/s:0;}},
 };
 
-function getTrendVals(m){
-  if(m==='roas')return rawDaily.map(d=>{const s=parseFloat(d.spend||0);const r=(d.action_values||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);return s?r/s:0;});
-  if(m==='ctr')return rawDaily.map(d=>parseFloat(d.ctr||0));
-  return rawDaily.map(d=>parseFloat(d[m]||0));
-}
-
-function renderTrend(){
-  killChart('trend');
-  const m=TMETA[currentMetric],labels=rawDaily.map(d=>fmtDate(d.date_start)),data=getTrendVals(currentMetric);
-  const ctx=document.getElementById('trendChart').getContext('2d');
-  const g=ctx.createLinearGradient(0,0,0,260);g.addColorStop(0,m.color+'22');g.addColorStop(1,'transparent');
-  const o=BASE_OPTS();o.scales.y.ticks.callback=m.fmt;o.plugins.tooltip.callbacks={label:c=>' '+m.tip(c.raw)};
-  ch.trend=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:m.color,backgroundColor:g,borderWidth:2.5,pointRadius:2.5,pointHoverRadius:5,tension:0.4,fill:true}]},options:o});
-}
-
-function switchTrend(metric,btn){
-  currentMetric=metric;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTrend();
-}
-
-function renderDonut(){
-  killChart('donut');
-  const top=rawCampaigns.map(c=>({name:c.name,spend:parseFloat(c.insights?.data?.[0]?.spend||0)})).sort((a,b)=>b.spend-a.spend).slice(0,6);
-  const total=top.reduce((s,c)=>s+c.spend,0);
-  const ctx=document.getElementById('donutChart').getContext('2d');
-  ch.donut=new Chart(ctx,{type:'doughnut',data:{labels:top.map(c=>c.name),datasets:[{data:top.map(c=>c.spend),backgroundColor:PAL,borderWidth:2,borderColor:'#fff',hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#e4e7f0',borderWidth:1,titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:12},callbacks:{label:c=>' '+fmtW(c.raw)}}}}});
-  document.getElementById('donut-legend').innerHTML=top.map((c,i)=>`<div class="legend-row"><div class="legend-color" style="background:${PAL[i]}"></div><span class="legend-name" title="${c.name}">${c.name}</span><span class="legend-amt">${fmtW(c.spend)}</span><span class="legend-pct">${total?(c.spend/total*100).toFixed(0)+'%':'0%'}</span></div>`).join('');
-}
-
-function renderMini(){
+function renderOverview(){
+  const meta=TMETA[curTrend];
   const labels=rawDaily.map(d=>fmtDate(d.date_start));
-  // CTR
-  killChart('ctr');
-  const co=BASE_OPTS();co.scales.y.ticks.callback=v=>v.toFixed(2)+'%';co.plugins.tooltip.callbacks={label:c=>' '+c.raw.toFixed(2)+'%'};
-  ch.ctr=new Chart(document.getElementById('ctrChart'),{type:'bar',data:{labels,datasets:[{data:rawDaily.map(d=>parseFloat(d.ctr||0)),backgroundColor:'rgba(194,120,3,0.15)',borderColor:'#c27803',borderWidth:1.5,borderRadius:3}]},options:co});
-  // CPC
-  killChart('cpc');
-  const cpo=BASE_OPTS();cpo.scales.y.ticks.callback=v=>'₩'+Math.round(v).toLocaleString('ko-KR');cpo.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
-  const cpcCtx=document.getElementById('cpcChart').getContext('2d');const cg=cpcCtx.createLinearGradient(0,0,0,150);cg.addColorStop(0,'rgba(224,36,36,0.1)');cg.addColorStop(1,'transparent');
-  ch.cpc=new Chart(cpcCtx,{type:'line',data:{labels,datasets:[{data:rawDaily.map(d=>parseFloat(d.cpc||0)),borderColor:'#e02424',backgroundColor:cg,borderWidth:2,pointRadius:2,tension:0.4,fill:true}]},options:cpo});
-  // ROAS
-  killChart('roas');
-  const ro=BASE_OPTS();ro.scales.y.ticks.callback=v=>v.toFixed(1)+'x';ro.plugins.tooltip.callbacks={label:c=>' '+c.raw.toFixed(2)+'x'};
-  const rCtx=document.getElementById('roasChart').getContext('2d');const rg=rCtx.createLinearGradient(0,0,0,150);rg.addColorStop(0,'rgba(126,58,242,0.1)');rg.addColorStop(1,'transparent');
-  const rData=rawDaily.map(d=>{const s=parseFloat(d.spend||0);const r=(d.action_values||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);return s?r/s:0;});
-  ch.roas=new Chart(rCtx,{type:'line',data:{labels,datasets:[{data:rData,borderColor:'#7e3af2',backgroundColor:rg,borderWidth:2,pointRadius:2,tension:0.4,fill:true}]},options:ro});
+  const data=rawDaily.map(meta.get);
+  killCh('trend');
+  const ctx=document.getElementById('ch-trend').getContext('2d');
+  const g=ctx.createLinearGradient(0,0,0,240);
+  g.addColorStop(0,meta.color+'22');g.addColorStop(1,'transparent');
+  const o=baseOpts();
+  o.scales.y.ticks.callback=meta.fmt;
+  o.plugins.tooltip.callbacks={label:c=>' '+meta.tfmt(c.raw)};
+  o.plugins.datalabels={
+    display:ctx=>{const n=labels.length;const i=ctx.dataIndex;return n<=14||(i===0||i===n-1||i%Math.ceil(n/7)===0);},
+    color:meta.color,font:{family:'JetBrains Mono',size:9,weight:'600'},
+    align:'top',anchor:'top',
+    formatter:v=>meta.fmt(v),
+    padding:2
+  };
+  ch.trend=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:meta.color,backgroundColor:g,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:0.4,fill:true}]},options:o});
+
+  // Donut
+  const top=rawCamp.slice(0,6);const total=top.reduce((s,c)=>s+parseFloat(c.spend||0),0);
+  killCh('donut');
+  const dCtx=document.getElementById('ch-donut').getContext('2d');
+  ch.donut=new Chart(dCtx,{type:'doughnut',
+    data:{labels:top.map(c=>c.campaign_name||c.adset_name||'—'),datasets:[{data:top.map(c=>parseFloat(c.spend||0)),backgroundColor:PAL,borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},datalabels:{display:true,color:'#fff',font:{size:10,weight:'700'},formatter:(v,ctx)=>{const pct=(v/total*100);return pct>5?pct.toFixed(0)+'%':'';}}
+      ,tooltip:{backgroundColor:'#fff',borderColor:'#e3e6f0',borderWidth:1,titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},callbacks:{label:c=>' '+fmtW(c.raw)}}}}
+  });
+  document.getElementById('donut-leg').innerHTML=top.map((c,i)=>`<div class="dr"><div class="dc" style="background:${PAL[i]}"></div><span class="dn">${c.campaign_name||'—'}</span><span class="da">${fmtW(c.spend)}</span><span class="dp">${total?(parseFloat(c.spend||0)/total*100).toFixed(0)+'%':'0%'}</span></div>`).join('');
+
+  // CTR mini
+  killCh('ctr');
+  const ctrO=baseOpts();ctrO.scales.y.ticks.callback=v=>v.toFixed(2)+'%';
+  ctrO.plugins.tooltip.callbacks={label:c=>' '+c.raw.toFixed(2)+'%'};
+  ctrO.plugins.datalabels={display:ctx=>{const n=rawDaily.length;return n<=10;},color:'#059669',font:{size:9,weight:'600'},align:'top',anchor:'top',formatter:v=>v.toFixed(2)+'%'};
+  const ctrData=rawDaily.map(d=>parseFloat(d.ctr||0));
+  ch.ctr=new Chart(document.getElementById('ch-ctr'),{type:'bar',data:{labels,datasets:[{data:ctrData,backgroundColor:'rgba(5,150,105,.15)',borderColor:'#059669',borderWidth:1.5,borderRadius:3}]},options:ctrO});
+
+  // CPC mini
+  killCh('cpc');
+  const cpcO=baseOpts();cpcO.scales.y.ticks.callback=v=>fmtW(v);
+  cpcO.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
+  cpcO.plugins.datalabels={display:ctx=>rawDaily.length<=10,color:'#7c3aed',font:{size:9,weight:'600'},align:'top',anchor:'top',formatter:v=>fmtW(v)};
+  const cpcCtx=document.getElementById('ch-cpc').getContext('2d');
+  const cg=cpcCtx.createLinearGradient(0,0,0,150);cg.addColorStop(0,'rgba(124,58,237,.12)');cg.addColorStop(1,'transparent');
+  ch.cpc=new Chart(cpcCtx,{type:'line',data:{labels,datasets:[{data:rawDaily.map(d=>parseFloat(d.cpc||0)),borderColor:'#7c3aed',backgroundColor:cg,borderWidth:2,pointRadius:2,tension:0.4,fill:true}]},options:cpcO});
+
+  // ROAS mini
+  killCh('roas');
+  const roasO=baseOpts();roasO.scales.y.ticks.callback=v=>v.toFixed(1)+'x';
+  roasO.plugins.tooltip.callbacks={label:c=>' '+c.raw.toFixed(2)+'x'};
+  roasO.plugins.datalabels={display:ctx=>rawDaily.length<=10,color:'#0891b2',font:{size:9,weight:'600'},align:'top',anchor:'top',formatter:v=>v.toFixed(2)+'x'};
+  const roasCtx=document.getElementById('ch-roas').getContext('2d');
+  const rg=roasCtx.createLinearGradient(0,0,0,150);rg.addColorStop(0,'rgba(8,145,178,.12)');rg.addColorStop(1,'transparent');
+  const roasD=rawDaily.map(TMETA.roas.get);
+  ch.roas=new Chart(roasCtx,{type:'line',data:{labels,datasets:[{data:roasD,borderColor:'#0891b2',backgroundColor:rg,borderWidth:2,pointRadius:2,tension:0.4,fill:true}]},options:roasO});
 }
 
-function renderTable(){
-  const box=document.getElementById('table-container');
-  const data=rawCampaigns.filter(c=>c.insights?.data?.[0]).sort((a,b)=>parseFloat(b.insights.data[0].spend||0)-parseFloat(a.insights.data[0].spend||0));
-  document.getElementById('camp-count').textContent=data.length+'개 캠페인';
-  if(!data.length){box.innerHTML='<div class="empty-state">캠페인 데이터가 없습니다.</div>';return;}
-  const maxSpend=Math.max(...data.map(c=>parseFloat(c.insights.data[0].spend||0)));
-  box.innerHTML=`<table><thead><tr>
-    <th>캠페인명</th><th>상태</th><th class="r">노출수</th><th class="r">클릭수</th><th class="r">CTR</th>
-    <th class="r">지출</th><th class="r">CPC</th><th class="r">CPM</th><th class="r">전환수</th><th class="r">CVR</th><th class="r">CPA</th><th class="r">ROAS</th>
-  </tr></thead><tbody>
-  ${data.map(c=>{
-    const ins=c.insights.data[0];
-    const conv=(ins.actions||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);
-    const revenue=(ins.action_values||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);
-    const spend=parseFloat(ins.spend||0),clicks=parseFloat(ins.clicks||0);
-    const cvr=clicks?conv/clicks*100:0,cpa=conv?spend/conv:0,roas=spend?revenue/spend:0;
-    const sCls=c.status==='ACTIVE'?'s-active':c.status==='PAUSED'?'s-paused':'s-other';
-    const sLbl=c.status==='ACTIVE'?'활성':c.status==='PAUSED'?'일시정지':c.status||'—';
-    const rCls=roas>=3?'rg':roas>=1?'rb':'rl';
-    const bp=maxSpend?Math.round(spend/maxSpend*100):0;
+function switchTrend(m,btn){
+  curTrend=m;
+  document.querySelectorAll('.t-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderOverview();
+}
+
+/* ─── DAILY TABLE ─── */
+function renderDailyTable(){
+  const box=document.getElementById('daily-tbl');
+  if(!rawDaily.length){box.innerHTML='<div class="empty">일별 데이터 없음</div>';return;}
+  const rows=[...rawDaily].reverse();
+  box.innerHTML=`<table>
+  <thead><tr>
+    <th>날짜</th><th class="r">지출</th><th class="r">노출수</th><th class="r">클릭수</th>
+    <th class="r">CTR</th><th class="r">CPC</th><th class="r">CPM</th>
+    <th class="r">전환수</th><th class="r">CVR</th><th class="r">CPA</th><th class="r">ROAS</th><th class="r">도달수</th><th class="r">빈도</th>
+  </tr></thead>
+  <tbody>${rows.map(d=>{
+    const conv=actS([d],CONV),revenue=valS([d],CONV);
+    const sp=parseFloat(d.spend||0),cl=parseFloat(d.clicks||0);
+    const cvr=cl?conv/cl*100:0,cpa=conv?sp/conv:0,roas=sp?revenue/sp:0;
     return`<tr>
-      <td><div class="c-name" title="${c.name}">${c.name}</div><div class="c-obj">${c.objective||''}</div></td>
-      <td><span class="s-badge ${sCls}">${sLbl}</span></td>
-      <td class="td-r">${fmt(parseFloat(ins.impressions||0))}</td>
-      <td class="td-r">${fmt(clicks)}</td>
-      <td class="td-r">${fmtPct(ins.ctr)}</td>
-      <td class="td-rh">${fmtW(spend)}<div class="bar-wrap"><div class="bar-fill" style="width:${bp}%"></div></div></td>
-      <td class="td-r">${fmtW(ins.cpc)}</td>
-      <td class="td-r">${fmtW(ins.cpm)}</td>
-      <td class="td-r">${conv>0?fmt(conv):'—'}</td>
+      <td style="font-family:var(--mono);font-weight:600">${d.date_start}</td>
+      <td class="td-rh">${fmtW(d.spend)}</td>
+      <td class="td-r">${fmtN(d.impressions)}</td>
+      <td class="td-r">${fmtN(d.clicks)}</td>
+      <td class="td-r">${fmtPct(d.ctr)}</td>
+      <td class="td-r">${fmtW(d.cpc)}</td>
+      <td class="td-r">${fmtW(d.cpm)}</td>
+      <td class="td-r">${conv>0?fmtN(conv):'—'}</td>
       <td class="td-r">${cvr>0?cvr.toFixed(2)+'%':'—'}</td>
       <td class="td-r">${cpa>0?fmtW(cpa):'—'}</td>
-      <td><span class="roas-pill ${rCls}">${roas>0?roas.toFixed(2)+'x':'—'}</span></td>
+      <td class="td-r">${roas>0?roas.toFixed(2)+'x':'—'}</td>
+      <td class="td-r">${fmtN(d.reach)}</td>
+      <td class="td-r">${d.frequency?parseFloat(d.frequency).toFixed(2):'—'}</td>
     </tr>`;
-  }).join('')}
-  </tbody></table>`;
+  }).join('')}</tbody>
+  </table>`;
 }
 
-function exportCSV(){
-  const data=rawCampaigns.filter(c=>c.insights?.data?.[0]).sort((a,b)=>parseFloat(b.insights.data[0].spend||0)-parseFloat(a.insights.data[0].spend||0));
-  if(!data.length){toast('⚠️ 데이터 없음');return;}
-  const rows=[['캠페인명','상태','노출수','클릭수','CTR(%)','지출','CPC','CPM','전환수','CVR(%)','CPA','ROAS']];
-  data.forEach(c=>{
-    const ins=c.insights.data[0];
-    const conv=(ins.actions||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);
-    const revenue=(ins.action_values||[]).filter(a=>CONV.includes(a.action_type)).reduce((s,a)=>s+parseFloat(a.value||0),0);
-    const spend=parseFloat(ins.spend||0),clicks=parseFloat(ins.clicks||0);
-    rows.push([c.name,c.status,ins.impressions||0,ins.clicks||0,parseFloat(ins.ctr||0).toFixed(2),spend.toFixed(0),parseFloat(ins.cpc||0).toFixed(0),parseFloat(ins.cpm||0).toFixed(0),conv,clicks?(conv/clicks*100).toFixed(2):'0',conv?spend/conv:0,spend?revenue/spend:0]);
+/* ─── Metrics row builder ─── */
+function metricsTDs(ins){
+  const conv=actS([ins],CONV),revenue=valS([ins],CONV);
+  const sp=parseFloat(ins.spend||0),cl=parseFloat(ins.clicks||0);
+  const cvr=cl?conv/cl*100:0,cpa=conv?sp/conv:0,roas=sp?revenue/sp:0;
+  const rCls=roas>=3?'rg':roas>=1?'rb':'rl';
+  return`
+    <td class="td-rh">${fmtW(ins.spend)}</td>
+    <td class="td-r">${fmtN(ins.impressions)}</td>
+    <td class="td-r">${fmtN(ins.clicks)}</td>
+    <td class="td-r">${fmtPct(ins.ctr)}</td>
+    <td class="td-r">${fmtW(ins.cpc)}</td>
+    <td class="td-r">${fmtW(ins.cpm)}</td>
+    <td class="td-r">${conv>0?fmtN(conv):'—'}</td>
+    <td class="td-r">${cvr>0?cvr.toFixed(2)+'%':'—'}</td>
+    <td class="td-r">${cpa>0?fmtW(cpa):'—'}</td>
+    <td class="td-r"><span class="rp ${rCls}">${roas>0?roas.toFixed(2)+'x':'—'}</span></td>`;
+}
+const metricsTH=()=>`<th class="r">지출</th><th class="r">노출수</th><th class="r">클릭수</th><th class="r">CTR</th><th class="r">CPC</th><th class="r">CPM</th><th class="r">전환수</th><th class="r">CVR</th><th class="r">CPA</th><th class="r">ROAS</th>`;
+
+/* ─── CAMPAIGN TABLE ─── */
+function renderCampTable(){
+  const box=document.getElementById('camp-tbl');
+  const maxSp=Math.max(...rawCamp.map(c=>parseFloat(c.spend||0)));
+  document.getElementById('camp-cnt').textContent=rawCamp.length+'개 캠페인';
+  if(!rawCamp.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
+  box.innerHTML=`<table><thead><tr><th>캠페인명</th><th>상태</th>${metricsTH()}</tr></thead>
+  <tbody>${rawCamp.map(c=>{
+    const bp=maxSp?Math.round(parseFloat(c.spend||0)/maxSp*100):0;
+    const st=c.campaign_status||c.status||'';
+    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
+    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
+    return`<tr>
+      <td><div class="td-br" title="${c.campaign_name||'—'}" style="font-weight:700">${c.campaign_name||'—'}</div><div style="height:3px;background:var(--bd);border-radius:99px;margin-top:3px;min-width:50px;overflow:hidden"><div style="height:100%;background:var(--brand);border-radius:99px;width:${bp}%"></div></div></td>
+      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
+      ${metricsTDs(c)}
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+/* ─── ADSET TABLE ─── */
+function renderAdsetTable(){
+  const box=document.getElementById('adset-tbl');
+  document.getElementById('adset-cnt').textContent=rawAdset.length+'개 광고세트';
+  if(!rawAdset.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
+  box.innerHTML=`<table><thead><tr><th>캠페인</th><th>광고세트명</th><th>상태</th>${metricsTH()}</tr></thead>
+  <tbody>${rawAdset.map(a=>{
+    const st=a.adset_status||a.status||'';
+    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
+    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
+    return`<tr>
+      <td><div class="td-n">${a.campaign_name||'—'}</div></td>
+      <td><div class="td-br" style="font-weight:700" title="${a.adset_name||'—'}">${a.adset_name||'—'}</div></td>
+      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
+      ${metricsTDs(a)}
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+/* ─── AD TABLE ─── */
+function renderAdTable(){
+  const box=document.getElementById('ad-tbl');
+  document.getElementById('ad-cnt').textContent=rawAd.length+'개 광고';
+  if(!rawAd.length){box.innerHTML='<div class="empty">데이터 없음</div>';return;}
+  box.innerHTML=`<table><thead><tr><th>캠페인</th><th>광고세트</th><th>광고명</th><th>상태</th>${metricsTH()}</tr></thead>
+  <tbody>${rawAd.map(a=>{
+    const st=a.ad_status||a.status||'';
+    const sCls=st==='ACTIVE'?'sa':st==='PAUSED'?'sp':'so';
+    const sLbl=st==='ACTIVE'?'활성':st==='PAUSED'?'일시정지':st||'—';
+    return`<tr>
+      <td><div class="td-n">${a.campaign_name||'—'}</div></td>
+      <td><div class="td-n">${a.adset_name||'—'}</div></td>
+      <td><div class="td-br" style="font-weight:700" title="${a.ad_name||'—'}">${a.ad_name||'—'}</div></td>
+      <td><span class="sbadge ${sCls}">${sLbl}</span></td>
+      ${metricsTDs(a)}
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+/* ─── DEMOGRAPHICS ─── */
+function renderDemo(){
+  renderAgeChart();
+  renderGenderChart();
+  renderHourlyChart();
+  renderAgeCTR();
+  renderAgeCPC();
+}
+
+function renderAgeChart(){
+  killCh('age');
+  if(!rawAge.length)return;
+  const ages=['13-17','18-24','25-34','35-44','45-54','55-64','65+'];
+  const spends=ages.map(ag=>{
+    const found=rawAge.find(d=>d.age===ag);
+    return found?parseFloat(found.spend||0):0;
+  }).filter((_,i)=>rawAge.some(d=>d.age===ages[i]));
+  const labels=ages.filter(ag=>rawAge.some(d=>d.age===ag));
+  const o=baseOpts();
+  o.scales.y.ticks.callback=v=>fmtW(v);
+  o.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
+  o.plugins.datalabels={display:true,color:'#fff',font:{size:10,weight:'700'},formatter:v=>fmtW(v)};
+  ch.age=new Chart(document.getElementById('ch-age'),{type:'bar',
+    data:{labels,datasets:[{data:spends,backgroundColor:PAL.slice(0,labels.length),borderRadius:6,borderSkipped:false}]},
+    options:o});
+}
+
+function renderGenderChart(){
+  killCh('gender');
+  if(!rawGender.length)return;
+  const gMap={'male':'남성','female':'여성','unknown':'불명'};
+  const labels=rawGender.map(g=>gMap[g.gender]||g.gender);
+  const spends=rawGender.map(g=>parseFloat(g.spend||0));
+  const o=baseOpts();o.cutout='65%';
+  o.plugins.datalabels={display:true,color:'#fff',font:{size:11,weight:'700'},formatter:(v,ctx)=>{
+    const tot=spends.reduce((s,x)=>s+x,0);return tot?(v/tot*100).toFixed(0)+'%':'';
+  }};
+  o.plugins.tooltip={backgroundColor:'#fff',borderColor:'#e3e6f0',borderWidth:1,titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:12},callbacks:{label:c=>{const tot=spends.reduce((s,x)=>s+x,0);return ` ${fmtW(c.raw)} (${tot?(c.raw/tot*100).toFixed(1):'0'}%)`}}};
+  ch.gender=new Chart(document.getElementById('ch-gender'),{type:'doughnut',
+    data:{labels,datasets:[{data:spends,backgroundColor:['#2563eb','#db2777','#94a3b8'],borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:o.plugins}});
+}
+
+function renderHourlyChart(){
+  killCh('hourly');
+  if(!rawHourly.length)return;
+  const labels=rawHourly.map(d=>{
+    const h=d.hourly_stats_aggregated_by_advertiser_time_zone||'';
+    const hNum=parseInt(h.split('-')[0]||'0');
+    return`${hNum}시`;
   });
-  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`meta_ads_${new Date().toISOString().slice(0,10)}.csv`;a.click();toast('✅ CSV 다운로드 완료');
+  const spends=rawHourly.map(d=>parseFloat(d.spend||0));
+  const o=baseOpts();
+  o.scales.y.ticks.callback=v=>fmtW(v);
+  o.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
+  o.plugins.datalabels={display:false};
+  ch.hourly=new Chart(document.getElementById('ch-hourly'),{type:'bar',
+    data:{labels,datasets:[{data:spends,backgroundColor:spends.map(v=>{
+      const max=Math.max(...spends);return v===max?'#2563eb':'rgba(37,99,235,0.35)';
+    }),borderRadius:4}]},options:o});
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('setup-panel').style.display!=='none')connectAPI();});
+function renderAgeCTR(){
+  killCh('agectr');
+  if(!rawAge.length)return;
+  const ages=['13-17','18-24','25-34','35-44','45-54','55-64','65+'];
+  const labels=ages.filter(ag=>rawAge.some(d=>d.age===ag));
+  const ctrs=labels.map(ag=>{const f=rawAge.find(d=>d.age===ag);return f?parseFloat(f.ctr||0):0;});
+  const o=baseOpts();o.scales.y.ticks.callback=v=>v.toFixed(2)+'%';
+  o.plugins.tooltip.callbacks={label:c=>' '+c.raw.toFixed(2)+'%'};
+  o.plugins.datalabels={display:true,color:'#059669',font:{size:9,weight:'700'},align:'top',anchor:'top',formatter:v=>v.toFixed(2)+'%'};
+  ch.agectr=new Chart(document.getElementById('ch-age-ctr'),{type:'bar',
+    data:{labels,datasets:[{data:ctrs,backgroundColor:'rgba(5,150,105,.15)',borderColor:'#059669',borderWidth:1.5,borderRadius:4}]},options:o});
+}
+
+function renderAgeCPC(){
+  killCh('agecpc');
+  if(!rawAge.length)return;
+  const ages=['13-17','18-24','25-34','35-44','45-54','55-64','65+'];
+  const labels=ages.filter(ag=>rawAge.some(d=>d.age===ag));
+  const cpcs=labels.map(ag=>{const f=rawAge.find(d=>d.age===ag);return f?parseFloat(f.cpc||0):0;});
+  const o=baseOpts();o.scales.y.ticks.callback=v=>fmtW(v);
+  o.plugins.tooltip.callbacks={label:c=>' '+fmtW(c.raw)};
+  o.plugins.datalabels={display:true,color:'#7c3aed',font:{size:9,weight:'700'},align:'top',anchor:'top',formatter:v=>fmtW(v)};
+  ch.agecpc=new Chart(document.getElementById('ch-age-cpc'),{type:'bar',
+    data:{labels,datasets:[{data:cpcs,backgroundColor:'rgba(124,58,237,.15)',borderColor:'#7c3aed',borderWidth:1.5,borderRadius:4}]},options:o});
+}
+
+/* ─── Tab Switcher ─── */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ─── CSV Exports ─── */
+function buildMetricsRow(ins){
+  const conv=actS([ins],CONV),revenue=valS([ins],CONV);
+  const sp=parseFloat(ins.spend||0),cl=parseFloat(ins.clicks||0);
+  const cvr=cl?conv/cl*100:0,cpa=conv?sp/conv:0,roas=sp?revenue/sp:0;
+  return[Math.round(sp),Math.round(parseFloat(ins.impressions||0)),Math.round(cl),parseFloat(ins.ctr||0).toFixed(2),Math.round(parseFloat(ins.cpc||0)),Math.round(parseFloat(ins.cpm||0)),Math.round(conv),cvr.toFixed(2),Math.round(cpa),roas.toFixed(2)];
+}
+const MHDR=['지출(₩)','노출수','클릭수','CTR(%)','CPC(₩)','CPM(₩)','전환수','CVR(%)','CPA(₩)','ROAS'];
+
+function exportCSV(){exportTableCSV('campaign');}
+
+function exportTableCSV(type){
+  let rows,hdr,data;
+  if(type==='campaign'){hdr=['캠페인명','상태',...MHDR];data=rawCamp.map(c=>[c.campaign_name||'',c.status||'',...buildMetricsRow(c)]);}
+  else if(type==='adset'){hdr=['캠페인','광고세트명','상태',...MHDR];data=rawAdset.map(a=>[a.campaign_name||'',a.adset_name||'',a.status||'',...buildMetricsRow(a)]);}
+  else if(type==='ad'){hdr=['캠페인','광고세트','광고명','상태',...MHDR];data=rawAd.map(a=>[a.campaign_name||'',a.adset_name||'',a.ad_name||'',a.status||'',...buildMetricsRow(a)]);}
+  rows=[hdr,...data];
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`meta_${type}_${new Date().toISOString().slice(0,10)}.csv`;a.click();toast('✅ CSV 다운로드 완료');
+}
+
+function exportDailyCSV(){
+  const hdr=['날짜',...MHDR,'도달수','빈도'];
+  const rows=rawDaily.map(d=>{
+    const r=buildMetricsRow(d);
+    return[d.date_start,...r,Math.round(parseFloat(d.reach||0)),parseFloat(d.frequency||0).toFixed(2)];
+  });
+  const csv=[hdr,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`meta_daily_${new Date().toISOString().slice(0,10)}.csv`;a.click();toast('✅ CSV 다운로드 완료');
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('setup').style.display!=='none')connectAPI();});
 </script>
 </body>
 </html>
