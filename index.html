@@ -159,7 +159,7 @@ td:first-child{text-align:left;font-weight:600;}
 <header>
   <div class="promo-chip">MBTI PROMOTION 2026</div>
   <h1>J팀 vs P팀</h1>
-  <div class="subtitle">2026.02.23 ~ 2026.03.31  · 평일 총 27일 · 먼저 15승 달성 팀이 최종 승리</div>
+  <div class="subtitle">2026.02.23 시작 · 평일 총 27일 · 먼저 15승 달성 팀이 최종 승리</div>
 </header>
 
 <div id="loading">
@@ -432,7 +432,7 @@ function render({dateHeaders,jTeam,pTeam}){
     html+=`<tr class="group-hd-row"><td colspan="${colSpan}" style="color:var(--${chip})">${chip.toUpperCase()}팀 · 팀 일평균 ${myAvg} &nbsp;|&nbsp; 비교 기준: ${chip==='j'?'P':'J'}팀 일평균 ${oppAvg}</td></tr>`;
     [...team].sort((a,b)=>b.avg-a.avg).forEach(m=>{
       const aT=m.avg>=myAvg, aO=m.avg>=oppAvg;
-      const tC=aT?'var(--win)':'var(--lose)';
+      const tC=aO?'var(--win)':'var(--lose)';
       const etag=exNames.has(m.name)?'<span class="tag-exempt">면제후보</span>':eduNm.has(m.name)?'<span class="tag-edu">교육후보</span>':'';
       const tDiff=fix2(m.avg-myAvg), oDiff=fix2(m.avg-oppAvg);
       html+=`<tr><td><span class="rank-dot" style="background:${tC}"></span>${m.name}${etag}</td><td><span class="team-chip-sm ${chip}">${chip.toUpperCase()}팀</span></td>`;
