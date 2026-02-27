@@ -82,6 +82,7 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .day-card.j-win{border-color:rgba(91,156,246,.35);background:linear-gradient(160deg,rgba(91,156,246,.08),var(--bg3));}
 .day-card.p-win{border-color:rgba(251,146,60,.35);background:linear-gradient(160deg,rgba(251,146,60,.08),var(--bg3));}
 .day-card.upcoming{opacity:.38;}
+.day-card.holiday{opacity:.38;}
 .day-card.today-card{border-color:var(--gold)!important;opacity:1;}
 .day-date{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;}
 .day-scores{display:flex;justify-content:center;align-items:center;gap:7px;margin-bottom:7px;}
@@ -94,8 +95,6 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .day-badge.p{background:rgba(251,146,60,.15);color:var(--p);}
 .day-badge.tbd{background:rgba(255,255,255,.05);color:var(--muted);}
 .today-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-
-
 .stakes-row-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;animation:fadeUp .55s .34s ease both;}
 .stakes-card{background:var(--bg2);border-radius:18px;overflow:hidden;border:1px solid var(--bd);}
 .stakes-hd{padding:15px 20px;display:flex;align-items:center;gap:12px;}
@@ -119,38 +118,95 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .exempt .s-transfer{color:var(--win);}
 .edu    .s-transfer{color:var(--lose);}
 .s-note{font-size:11px;color:var(--muted);padding:6px 4px 0;line-height:1.7;}
+
+/* ── 개인 점수 테이블 ── */
 .ind-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:18px;overflow:hidden;animation:fadeUp .55s .38s ease both;}
-.ind-hd{padding:16px 24px;border-bottom:1px solid var(--bd);}
-.t-scroll{overflow-x:auto;padding:0 16px 16px;}
-table{width:100%;border-collapse:collapse;min-width:640px;}
-thead th{padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;border-bottom:1px solid var(--bd);white-space:nowrap;}
-thead th:first-child{text-align:left;}
+.ind-hd{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd);}
+.date-nav{display:flex;align-items:center;gap:10px;}
+.date-arrow{width:30px;height:30px;border:none;background:transparent;color:var(--j);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .2s;}
+.date-arrow:hover{background:rgba(91,156,246,.15);transform:scale(1.1);}
+.date-arrow:active{transform:scale(.95);}
+.date-arrow:disabled{opacity:.3;cursor:not-allowed;transform:scale(1);}
+.date-display{font-size:11px;font-weight:700;color:var(--muted);min-width:130px;text-align:center;}
+.t-scroll{overflow-x:auto;padding:0 16px 16px;scroll-behavior:smooth;}
+
+table{width:100%;border-collapse:separate;border-spacing:0;}
+
+/* 기본 헤더 (고정 열) */
+thead th{
+  padding:12px 8px;text-align:center;font-size:11px;font-weight:700;
+  color:var(--sub);letter-spacing:.4px;
+  border-bottom:1px solid var(--bd);
+  white-space:nowrap;background:rgba(255,255,255,.04);
+}
+/* 날짜 헤더 */
+thead th.date-th{
+  background:rgba(91,156,246,.07);
+  color:rgba(145,185,250,.85);
+  border-left:1px solid rgba(91,156,246,.12);
+  width:52px;min-width:52px;padding:12px 4px;
+  z-index:1;
+}
+
+/* sticky 고정 열 */
+thead th:first-child{text-align:left;padding-left:14px;position:sticky;left:0;background:var(--bg3);z-index:10;width:100px;}
+thead th:nth-child(2){position:sticky;left:108px;background:var(--bg3);z-index:10;width:45px;}
+thead th:nth-child(3){position:sticky;left:161px;background:var(--bg3);z-index:10;width:55px;}
+thead th:nth-child(4){position:sticky;left:224px;background:var(--bg3);z-index:10;width:60px;}
+thead th:nth-child(5){position:sticky;left:292px;background:var(--bg3);z-index:10;width:50px;}
+thead th:nth-child(6){position:sticky;left:350px;background:var(--bg3);z-index:10;width:80px;box-shadow:3px 0 8px rgba(0,0,0,.6),2px 0 0 rgba(255,255,255,.10);}
+
 tbody tr{transition:background .15s;}
 tbody tr:hover{background:rgba(255,255,255,.025);}
-td{padding:9px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px;font-weight:500;white-space:nowrap;}
-td:first-child{text-align:left;font-weight:600;}
-.group-hd-row td{padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.8px;border-top:2px solid var(--bd);border-bottom:1px solid var(--bd);}
-.team-chip-sm{font-size:10px;padding:2px 9px;border-radius:99px;font-weight:700;}
-.team-chip-sm.j{background:var(--js);color:var(--j);border:1px solid rgba(91,156,246,.25);}
-.team-chip-sm.p{background:var(--ps);color:var(--p);border:1px solid rgba(251,146,60,.25);}
-.rank-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;font-weight:500;white-space:nowrap;border-top:none;}
+
+/* sticky body 열 */
+td:first-child{text-align:left;font-weight:600;padding:10px 8px 10px 14px;position:sticky;left:0;background:var(--bg2);z-index:7;width:100px;}
+td:nth-child(2){position:sticky;left:108px;background:var(--bg2);z-index:7;width:45px;}
+td:nth-child(3){position:sticky;left:161px;background:var(--bg2);z-index:7;width:55px;}
+td:nth-child(4){position:sticky;left:224px;background:var(--bg2);z-index:7;width:60px;}
+td:nth-child(5){position:sticky;left:292px;background:var(--bg2);z-index:7;width:50px;}
+td:nth-child(6){position:sticky;left:350px;background:var(--bg2);z-index:7;width:80px;box-shadow:3px 0 8px rgba(0,0,0,.6),2px 0 0 rgba(255,255,255,.08);}
+
+/* 날짜 td */
+td.date-td{background:rgba(91,156,246,.03);z-index:1;width:52px;min-width:52px;padding:10px 4px;}
+tbody tr:hover td:nth-child(-n+6){background:rgba(255,255,255,.04);}
+tbody tr:hover td.date-td{background:rgba(91,156,246,.07);}
+
+.group-hd-row td{padding:10px 8px;font-size:11px;font-weight:700;letter-spacing:.8px;border-top:2px solid var(--bd);border-bottom:1px solid var(--bd);position:sticky;left:0;background:rgba(0,0,0,.3);z-index:8;}
+.group-hd-row.j td{color:var(--j);}
+.group-hd-row.p td{color:var(--p);}
+
+.team-chip{font-size:9px;padding:2px 6px;border-radius:6px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;}
+.team-chip.j{background:var(--js);color:var(--j);border:1px solid rgba(91,156,246,.25);}
+.team-chip.p{background:var(--ps);color:var(--p);border:1px solid rgba(251,146,60,.25);}
+.rank-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.member-name{display:flex;align-items:center;gap:3px;min-height:20px;}
 .td-avg{font-size:12px;font-weight:800;}
 .above-avg{color:var(--win);}
 .below-avg{color:var(--lose);}
 .cell-hi{color:var(--win);font-weight:700;}
 .cell-z{color:var(--muted);}
 .cell-null{color:rgba(255,255,255,.15);}
+.rank-badge{font-size:10px;font-weight:700;padding:3px 6px;border-radius:4px;display:inline-block;margin-left:3px;vertical-align:middle;}
+.rank-badge.top{background:rgba(16,185,129,.15);color:var(--win);border:1px solid rgba(16,185,129,.4);}
+.rank-badge.bottom{background:rgba(244,63,94,.15);color:var(--lose);border:1px solid rgba(244,63,94,.4);}
 .tag-exempt{font-size:9px;font-weight:700;background:rgba(16,185,129,.12);color:var(--win);border:1px solid rgba(16,185,129,.3);border-radius:5px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
 .tag-edu{font-size:9px;font-weight:700;background:rgba(244,63,94,.12);color:var(--lose);border:1px solid rgba(244,63,94,.3);border-radius:5px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
 .td-transfer{font-size:11px;font-weight:700;color:var(--gold);}
 .td-transfer-zero{font-size:11px;color:var(--muted);}
+.td-diff{font-size:11px;font-weight:700;}
+.diff-positive{color:var(--win);}
+.diff-negative{color:var(--lose);}
+.comparison-cell{display:flex;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;}
+
 .update-badge{position:fixed;bottom:20px;right:20px;z-index:100;background:var(--bg2);border:1px solid var(--bd2);border-radius:12px;padding:8px 14px;font-size:11px;color:var(--muted);display:none;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);cursor:pointer;}
 .update-badge:hover{border-color:var(--j);color:var(--text);}
 .update-dot{width:6px;height:6px;border-radius:50%;background:var(--win);box-shadow:0 0 6px var(--win);}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-@media(max-width:720px){.score-hero{grid-template-columns:1fr 100px 1fr;}.s-wins{font-size:44px;}.prob-cards{grid-template-columns:1fr;}.stakes-row-grid{grid-template-columns:1fr;}.algo-factors{grid-template-columns:1fr;}}
+@media(max-width:720px){.score-hero{grid-template-columns:1fr 100px 1fr;}.s-wins{font-size:44px;}.stakes-row-grid{grid-template-columns:1fr;}}
 @media(max-width:480px){.score-center{display:none;}.score-hero{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
@@ -250,15 +306,20 @@ td:first-child{text-align:left;font-weight:600;}
 
   <div class="ind-wrap">
     <div class="ind-hd">
-      <div class="section-title" style="margin:0">
+      <div class="section-title">
         <span style="font-size:15px">📊</span> 전체 개인 점수 현황
-        <span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:4px">⭐ 상대팀 평균 상회 &nbsp;💪 상대팀 평균 미달</span>
+        <span style="font-size:11px;font-weight:500;color:var(--muted);margin-left:4px">⭐ 상대팀 평균 상회 &nbsp;💪 상대팀 평균 미달</span>
+      </div>
+      <div class="date-nav">
+        <button class="date-arrow" id="prevBtn" onclick="prevDates()" title="이전 날짜">◀</button>
+        <div class="date-display" id="dateDisplay"></div>
+        <button class="date-arrow" id="nextBtn" onclick="nextDates()" title="다음 날짜">▶</button>
       </div>
     </div>
     <div class="t-scroll"><table id="main-table"></table></div>
   </div>
 </div>
-</div><!-- /wrap -->
+</div>
 
 <div class="update-badge" id="update-badge" onclick="loadData()" title="클릭하면 새로고침">
   <div class="update-dot"></div>
@@ -271,6 +332,7 @@ const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQwLn1ITezc
 const TARGET      = 15;
 const TOTAL_WD    = 27;
 const INTERN_RANK = '인턴';
+const VISIBLE_DATES = 9;
 
 const WEEK_SCHEDULE = [
   { label:'1주차', dates:['02월 23일','02월 24일','02월 25일','02월 26일','02월 27일'] },
@@ -299,7 +361,7 @@ const isDate = s => /\d+월\s*\d+일/.test((s||'').trim());
 const toNum  = s => { const v=parseFloat((s||'').replace(/[^0-9.-]/g,'')); return isNaN(v)?0:v; };
 const fix2   = v => Math.round(v*100)/100;
 const avgArr = a => a.length ? a.reduce((s,v)=>s+v,0)/a.length : 0;
-const shortD = d => d.replace(/0?(\d+)월\s*0?(\d+)일/,'$1/$2');
+const shortD = d => d.replace(/0?(\d+)월\s*0?(\d+)일/,(_,m,day)=>String(m).padStart(2,'0')+'/'+String(day).padStart(2,'0'));
 
 /* ══════ DATA PARSER ══════ */
 function parseData(rows) {
@@ -333,8 +395,100 @@ function parseData(rows) {
   return {dateHeaders,jTeam,pTeam};
 }
 
+/* ══════ 페이지네이션 상태 ══════ */
+let _pagedDates = [];   // 최신→과거 순 정렬된 실제 날짜 배열 (MM/DD)
+let _pagedHeaders = []; // 같은 순서의 원본 dateHeaders 배열
+let _pagedData = null;  // {jTeam, pTeam, jTeamAvg, pTeamAvg, exemptNames, eduNames}
+let _pageIndex = 0;     // 0 = 가장 최신
+
+function prevDates(){
+  if(_pageIndex > 0){ _pageIndex = Math.max(0, _pageIndex - VISIBLE_DATES); renderIndividualTable(); }
+}
+function nextDates(){
+  if(_pageIndex + VISIBLE_DATES < _pagedDates.length){ _pageIndex = Math.min(_pagedDates.length - VISIBLE_DATES, _pageIndex + VISIBLE_DATES); renderIndividualTable(); }
+}
+
+function renderIndividualTable(){
+  if(!_pagedData || !_pagedDates.length) return;
+  const { jTeam, pTeam, jTeamAvg, pTeamAvg, exemptNames, eduNames } = _pagedData;
+
+  const total = _pagedDates.length;
+  const startIdx = _pageIndex;
+  const endIdx = Math.min(_pageIndex + VISIBLE_DATES, total);
+  const sliceDates = _pagedDates.slice(startIdx, endIdx);     // MM/DD 표시용
+  const sliceHeaders = _pagedHeaders.slice(startIdx, endIdx); // 원본 dateHeaders 인덱스 계산용
+
+  // 날짜 표시 업데이트
+  if(sliceDates.length){
+    document.getElementById('dateDisplay').textContent = sliceDates[0] + ' ~ ' + sliceDates[sliceDates.length-1];
+  }
+  document.getElementById('prevBtn').disabled = startIdx === 0;
+  document.getElementById('nextBtn').disabled = endIdx >= total;
+
+  // 슬라이스된 날짜에 해당하는 원래 dateHeaders 인덱스 맵핑
+  const sliceOriginalIdx = sliceHeaders.map(h => _allDateHeaders.indexOf(h));
+
+  let html = `<thead><tr>
+    <th>이름</th><th>팀</th><th>평균</th><th>이관매출</th><th>팀比</th><th>상대팀比</th>`;
+  sliceDates.forEach(d => { html += `<th class="date-th">${d}</th>`; });
+  html += `</tr></thead><tbody>`;
+
+  const renderTeam = (team, myAvg, oppAvg, chip) => {
+    html += `<tr class="group-hd-row ${chip}"><td colspan="${6 + sliceDates.length}">${chip.toUpperCase()}팀 · 팀 일평균 ${myAvg}</td></tr>`;
+    const sorted = [...team].sort((a,b) => b.transfer - a.transfer);
+    const topTransfer = new Set(sorted.filter(m=>!m.isIntern).slice(0,2).map(m=>m.name));
+    const bottomTransfer = new Set(sorted.filter(m=>!m.isIntern).slice(-2).map(m=>m.name));
+
+    [...team].sort((a,b) => b.avg - a.avg).forEach(m => {
+      const aT = m.avg >= myAvg;
+      const aO = m.avg >= oppAvg;
+      const tC = aO ? 'var(--win)' : 'var(--lose)';
+      const tDiff = fix2(m.avg - myAvg);
+      const oDiff = fix2(m.avg - oppAvg);
+
+      let badgeHtml = '';
+      if(exemptNames.has(m.name))      badgeHtml = '<span class="rank-badge top">면제</span>';
+      else if(eduNames.has(m.name))    badgeHtml = '<span class="rank-badge bottom">교육</span>';
+
+      html += `<tr>
+        <td><div class="member-name"><span class="rank-dot" style="background:${tC}"></span>${m.name}${badgeHtml}</div></td>
+        <td><span class="team-chip ${chip}">${chip.toUpperCase()}</span></td>
+        <td class="td-avg ${aT?'above-avg':'below-avg'}">${m.avg}</td>
+        <td class="${m.transfer>0?'td-transfer':'td-transfer-zero'}">${m.transfer>0?(m.transfer/10000).toFixed(0)+'만':'-'}</td>
+        <td class="td-diff ${tDiff>=0?'diff-positive':'diff-negative'}">${tDiff>=0?'+':''}${tDiff}</td>
+        <td><div class="comparison-cell"><span>${aO?'⭐':'💪'}</span><span style="color:${aO?'var(--win)':'var(--lose)'};font-weight:700">${oDiff>=0?'+':''}${oDiff}</span></div></td>`;
+
+      sliceOriginalIdx.forEach(origIdx => {
+        const v = origIdx >= 0 ? m.scores[origIdx] : null;
+        let cls = 'date-td';
+        let content = '—';
+        if(v !== null && v !== undefined){
+          content = v;
+          if(v >= 10) cls += ' cell-hi';
+          else if(v === 0) cls += ' cell-z';
+        } else {
+          cls += ' cell-null';
+        }
+        html += `<td class="${cls}">${content}</td>`;
+      });
+
+      html += `</tr>`;
+    });
+  };
+
+  renderTeam(jTeam, jTeamAvg, pTeamAvg, 'j');
+  renderTeam(pTeam, pTeamAvg, jTeamAvg, 'p');
+  html += '</tbody>';
+  document.getElementById('main-table').innerHTML = html;
+}
+
+// 전역 원본 dateHeaders 참조 (인덱스 계산용)
+let _allDateHeaders = [];
+
 /* ══════ RENDER ══════ */
-function render({dateHeaders,jTeam,pTeam}){
+function render({dateHeaders, jTeam, pTeam}){
+  _allDateHeaders = dateHeaders;
+
   const dayAvg=(team,i)=>{const v=team.map(m=>m.scores[i]).filter(v=>v!==null);return v.length?fix2(avgArr(v)):null;};
   const dayResults={};
   dateHeaders.forEach((d,i)=>{
@@ -386,7 +540,11 @@ function render({dateHeaders,jTeam,pTeam}){
     dDiv.style.gridTemplateColumns=`repeat(${wk.dates.length},1fr)`;
     wk.dates.forEach(d=>{
       const res=dayResults[d], isT=d===todayLabel, card=document.createElement('div');
-      if(res){
+      const isHoliday = d==='03월 02일';
+      if(isHoliday){
+        card.className='day-card holiday';
+        card.innerHTML=`<div class="day-date">${shortD(d)}</div><div class="day-scores"><span style="color:var(--muted);font-size:16px;font-weight:300">—</span></div><div class="day-badge tbd">대체공휴일</div>`;
+      } else if(res){
         card.className=`day-card ${res.winner}-win${isT?' today-card':''}`;
         card.innerHTML=`${isT?'<div class="today-line"></div>':''}<div class="day-date">${shortD(d)}${isT?' 🔴':''}</div><div class="day-scores"><span class="day-sc j">${res.j}</span><span class="day-sep">:</span><span class="day-sc p">${res.p}</span></div><div class="day-badge ${res.winner}">${res.winner==='j'?'J팀 승':'P팀 승'}</div>`;
       } else {
@@ -397,7 +555,8 @@ function render({dateHeaders,jTeam,pTeam}){
     });
     block.appendChild(dDiv); wCont.appendChild(block);
   });
-  document.getElementById('week-meta').textContent=`총 ${TOTAL_WD}평일 · J ${totalJ}승 · P ${totalP}승`;
+ 
+
   // Stakes
   const jLeading=jWins>=pWins;
   const winTeam=jLeading?jTeam:pTeam, loseTeam=jLeading?pTeam:jTeam;
@@ -422,31 +581,18 @@ function render({dateHeaders,jTeam,pTeam}){
   buildStakes(exemptList,'exempt-body',wL);
   buildStakes(eduList,'edu-body',lL);
 
-  // Individual Table
-  const colSpan=5+playedDates.length;
-  let html=`<thead><tr><th style="text-align:left">이름</th><th>팀</th>`;
-  playedDates.forEach(d=>html+=`<th>${shortD(d)}</th>`);
-  html+=`<th>평균</th><th>이관매출</th><th>팀比</th><th>상대팀比</th></tr></thead><tbody>`;
-
-  const renderTeam=(team,myAvg,oppAvg,chip,exNames,eduNm)=>{
-    html+=`<tr class="group-hd-row"><td colspan="${colSpan}" style="color:var(--${chip})">${chip.toUpperCase()}팀 · 팀 일평균 ${myAvg} &nbsp;|&nbsp; 비교 기준: ${chip==='j'?'P':'J'}팀 일평균 ${oppAvg}</td></tr>`;
-    [...team].sort((a,b)=>b.avg-a.avg).forEach(m=>{
-      const aT=m.avg>=myAvg, aO=m.avg>=oppAvg;
-      const tC=aO?'var(--win)':'var(--lose)';
-      const etag=exNames.has(m.name)?'<span class="tag-exempt">면제후보</span>':eduNm.has(m.name)?'<span class="tag-edu">교육후보</span>':'';
-      const tDiff=fix2(m.avg-myAvg), oDiff=fix2(m.avg-oppAvg);
-      html+=`<tr><td><span class="rank-dot" style="background:${tC}"></span>${m.name}${etag}</td><td><span class="team-chip-sm ${chip}">${chip.toUpperCase()}팀</span></td>`;
-      playedDates.forEach((_,i)=>{const v=m.scores[i];html+=`<td class="${v===null?'cell-null':v===0?'cell-z':v>=10?'cell-hi':''}">${v===null?'—':v}</td>`;});
-      html+=`<td class="td-avg ${aT?'above-avg':'below-avg'}">${m.avg}</td>
-        <td class="${m.transfer>0?'td-transfer':'td-transfer-zero'}">${m.transfer>0?m.transfer.toLocaleString('ko-KR')+'원':'-'}</td>
-        <td style="color:${tC};font-size:11px;font-weight:700">${tDiff>=0?'+':''}${tDiff}</td>
-        <td style="font-size:12px">${aO?'⭐':'💪'}<span style="color:${aO?'var(--win)':'var(--lose)'};font-size:11px;font-weight:700;margin-left:2px">${oDiff>=0?'+':''}${oDiff}</span></td></tr>`;
-    });
+  // ── 개인 테이블 페이지네이션 준비 ──
+  // playedDates를 최신→과거 순으로 뒤집기
+  const reversedHeaders = [...playedDates].reverse();
+  _pagedHeaders = reversedHeaders;
+  _pagedDates   = reversedHeaders.map(h => shortD(h));
+  _pageIndex    = 0;
+  _pagedData    = {
+    jTeam, pTeam,
+    jTeamAvg, pTeamAvg,
+    exemptNames, eduNames
   };
-  renderTeam(jTeam,jTeamAvg,pTeamAvg,'j',exemptNames,eduNames);
-  renderTeam(pTeam,pTeamAvg,jTeamAvg,'p',exemptNames,eduNames);
-  html+='</tbody>';
-  document.getElementById('main-table').innerHTML=html;
+  renderIndividualTable();
 
   // 업데이트 뱃지
   const now2=new Date();
