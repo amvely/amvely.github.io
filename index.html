@@ -94,6 +94,8 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .day-badge.p{background:rgba(251,146,60,.15);color:var(--p);}
 .day-badge.tbd{background:rgba(255,255,255,.05);color:var(--muted);}
 .today-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+
+/* 확률 섹션 */
 .prob-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:18px;padding:22px 24px;margin-bottom:20px;animation:fadeUp .55s .29s ease both;}
 .prob-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;}
 .prob-card{background:var(--bg3);border-radius:14px;padding:20px 22px;border:1px solid var(--bd);text-align:center;}
@@ -108,8 +110,25 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .gauge-fill{height:100%;border-radius:99px;transition:width 1.6s cubic-bezier(.4,0,.2,1);}
 .prob-card.j .gauge-fill{background:linear-gradient(90deg,var(--j2),var(--j));}
 .prob-card.p .gauge-fill{background:linear-gradient(90deg,var(--p2),var(--p));}
-.algo-box{background:rgba(255,255,255,.025);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;font-size:12px;color:var(--sub);line-height:1.8;}
-.algo-title{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1.5px;margin-bottom:5px;}
+
+/* 알고리즘 설명 박스 */
+.algo-box{background:rgba(255,255,255,.025);border:1px solid var(--bd);border-radius:12px;padding:16px 18px;font-size:12px;color:var(--sub);line-height:1.9;}
+.algo-title{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1.5px;margin-bottom:10px;}
+.algo-factors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.algo-factor{background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;}
+.af-label{font-size:10px;font-weight:700;color:var(--gold);margin-bottom:3px;}
+.af-val{font-size:11px;color:var(--sub);}
+
+/* 요인 상세 */
+.factor-detail{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);}
+.factor-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.factor-name{font-size:11px;color:var(--muted);}
+.factor-bars{display:flex;gap:6px;align-items:center;}
+.factor-bar-j{height:6px;background:var(--j);border-radius:3px;min-width:2px;}
+.factor-bar-p{height:6px;background:var(--p);border-radius:3px;min-width:2px;}
+.factor-num-j{font-size:10px;font-weight:700;color:var(--j);min-width:36px;text-align:right;}
+.factor-num-p{font-size:10px;font-weight:700;color:var(--p);min-width:36px;}
+
 .stakes-row-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;animation:fadeUp .55s .34s ease both;}
 .stakes-card{background:var(--bg2);border-radius:18px;overflow:hidden;border:1px solid var(--bd);}
 .stakes-hd{padding:15px 20px;display:flex;align-items:center;gap:12px;}
@@ -125,7 +144,7 @@ h1{font-size:clamp(28px,5vw,50px);font-weight:900;letter-spacing:-1px;line-heigh
 .s-rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
 .exempt .s-rank{background:rgba(16,185,129,.15);color:var(--win);}
 .edu    .s-rank{background:rgba(244,63,94,.15);color:var(--lose);}
-.s-name{font-size:13px;font-weight:600;flex:1;}
+.s-name-st{font-size:13px;font-weight:600;flex:1;}
 .s-team-chip{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;}
 .s-team-chip.j{background:var(--js);color:var(--j);}
 .s-team-chip.p{background:var(--ps);color:var(--p);}
@@ -164,7 +183,7 @@ td:first-child{text-align:left;font-weight:600;}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-@media(max-width:720px){.score-hero{grid-template-columns:1fr 100px 1fr;}.s-wins{font-size:44px;}.prob-cards{grid-template-columns:1fr;}.stakes-row-grid{grid-template-columns:1fr;}}
+@media(max-width:720px){.score-hero{grid-template-columns:1fr 100px 1fr;}.s-wins{font-size:44px;}.prob-cards{grid-template-columns:1fr;}.stakes-row-grid{grid-template-columns:1fr;}.algo-factors{grid-template-columns:1fr;}}
 @media(max-width:480px){.score-center{display:none;}.score-hero{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
@@ -258,10 +277,19 @@ td:first-child{text-align:left;font-weight:600;}
       </div>
     </div>
     <div class="algo-box">
-      <div class="algo-title">📐 알고리즘 — ELO-Weighted Monte Carlo Simulation</div>
-      ① 일별 팀 평균 점수차를 로지스틱 함수로 변환 → <strong>기본 일승 확률 p₁</strong><br>
-      ② 현재 관측된 실제 <strong>승률 p₂</strong>와 가중 혼합 (p = 0.6×p₁ + 0.4×p₂)<br>
-      ③ 남은 평일 기준 <strong>10,000회 Monte Carlo 시뮬레이션</strong> → 먼저 15승 도달 확률 산출
+      <div class="algo-title">📐 알고리즘 — 4요인 가중 Monte Carlo Simulation</div>
+      <div class="algo-factors" id="algo-factors">
+        <!-- JS로 채움 -->
+      </div>
+      <div id="factor-detail-container"></div>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8;">
+        ① <b>전체 점수 기반 기본확률</b>: 전체 평균 일별 점수차를 로지스틱 함수로 변환<br>
+        ② <b>최근 3경기 모멘텀</b>: 최근 3일 결과에 지수 가중치 부여 (최신일 가중치 2배)<br>
+        ③ <b>팀 일관성 지수</b>: 점수 분산이 낮을수록 안정적 → 승률 가산<br>
+        ④ <b>이관매출 반영</b>: 팀 누적 이관매출 비율로 역량 보정<br>
+        최종 p = 0.35×p₁ + 0.35×p₂_모멘텀 + 0.15×p₃_일관성 + 0.15×p₄_이관매출<br>
+        → 남은 평일 기준 <b>50,000회 Monte Carlo 시뮬레이션</b> → 먼저 15승 도달 확률 산출
+      </div>
     </div>
   </div>
 
@@ -348,12 +376,10 @@ function parseData(rows) {
 
   for(const row of rows){
     const c=row.map(s=>(s||'').trim());
-    // Section 감지
     if(c[1]==='J팀'&&c[3]==='평균'){section='jScore';dateHeaders=row.slice(4).map(s=>s.trim()).filter(isDate);continue;}
     if(c[1]==='P팀'&&c[3]==='평균'){section='pScore';continue;}
     if(c[1]==='J팀'&&c[2]==='이관매출'&&isDate(c[3])){section='jTransfer';continue;}
     if(c[1]==='P팀'&&c[2]==='이관매출'&&isDate(c[3])){section='pTransfer';continue;}
-    // 빈행/요약행 스킵
     if(!c[0]||!c[1]||c[1]==='일평균')continue;
 
     const rank=c[0], name=c[1];
@@ -375,11 +401,97 @@ function parseData(rows) {
   return {dateHeaders,jTeam,pTeam};
 }
 
+/* ══════ 핵심: 4요인 가중 확률 계산 ══════ */
+function computeWinProbability(playedDates, dayResults, jWins, pWins, remaining, jTeam, pTeam) {
+  if (!playedDates.length) return { p: 0.5, factors: null };
+
+  const margins = playedDates.map(d => dayResults[d].j - dayResults[d].p);
+
+  /* ── 요인 1: 전체 평균 점수차 기반 기본 확률 ──
+     평균 마진을 로지스틱 함수로 변환. 스케일 0.15는 실제 점수 범위에 따라 조정 가능 */
+  const avgMargin = avgArr(margins);
+  const p1 = 1 / (1 + Math.exp(-0.15 * avgMargin));
+
+  /* ── 요인 2: 최근 3경기 지수 가중 모멘텀 ──
+     최신일에 높은 가중치: [1, 1.5, 2.0] (오래된 → 최신 순) */
+  let recentP2 = 0.5;
+  if (playedDates.length >= 1) {
+    const recentN = Math.min(3, playedDates.length);
+    const weights = [1, 1.5, 2.0].slice(3 - recentN);
+    const totalW = weights.reduce((s, w) => s + w, 0);
+    let weightedJ = 0;
+    for (let i = 0; i < recentN; i++) {
+      const d = playedDates[playedDates.length - recentN + i];
+      const w = weights[i];
+      weightedJ += (dayResults[d].winner === 'j' ? 1 : 0) * w;
+    }
+    recentP2 = weightedJ / totalW;
+  }
+
+  /* ── 요인 3: 팀 일관성 지수 ──
+     점수 분산이 낮을수록 안정적. 분산 역수 비율로 J팀 유리도 계산 */
+  const getTeamVariance = (team, dateIdx) => {
+    const vals = team.map(m => m.scores[dateIdx]).filter(v => v !== null);
+    if (vals.length < 2) return 1;
+    const avg = avgArr(vals);
+    return avgArr(vals.map(v => (v - avg) ** 2));
+  };
+
+  let jTotalVar = 0, pTotalVar = 0;
+  playedDates.forEach((d, i) => {
+    const idx = i; // 실제로는 dateHeaders 인덱스 매핑 필요하지만 순서가 동일하므로 ok
+    jTotalVar += getTeamVariance(jTeam, idx);
+    pTotalVar += getTeamVariance(pTeam, idx);
+  });
+  const jAvgVar = jTotalVar / playedDates.length + 0.001; // 0 방지
+  const pAvgVar = pTotalVar / playedDates.length + 0.001;
+  // J 분산이 낮을수록 p3 > 0.5
+  const p3 = pAvgVar / (jAvgVar + pAvgVar);
+
+  /* ── 요인 4: 이관매출 역량 비율 ──
+     팀 전체 이관매출 합산 비율 (인턴 제외) */
+  const jTransferSum = jTeam.filter(m => !m.isIntern).reduce((s, m) => s + m.transfer, 0);
+  const pTransferSum = pTeam.filter(m => !m.isIntern).reduce((s, m) => s + m.transfer, 0);
+  let p4 = 0.5;
+  if (jTransferSum + pTransferSum > 0) {
+    p4 = jTransferSum / (jTransferSum + pTransferSum);
+  }
+
+  /* ── 최종 가중 혼합 ── */
+  const w1 = 0.35, w2 = 0.35, w3 = 0.15, w4 = 0.15;
+  const p = w1 * p1 + w2 * recentP2 + w3 * p3 + w4 * p4;
+
+  /* ── Monte Carlo: 50,000회 ── */
+  let jFinal = 0;
+  for (let s = 0; s < 50000; s++) {
+    let jW = jWins, pW = pWins, r = remaining;
+    while (r > 0 && jW < TARGET && pW < TARGET) {
+      Math.random() < p ? jW++ : pW++;
+      r--;
+    }
+    if (jW >= TARGET) jFinal++;
+  }
+  const jProb = jFinal / 50000;
+
+  return {
+    p: jProb,
+    factors: {
+      p1: fix2(p1 * 100),
+      p2: fix2(recentP2 * 100),
+      p3: fix2(p3 * 100),
+      p4: fix2(p4 * 100),
+      avgMargin: fix2(avgMargin),
+      jVar: fix2(jAvgVar),
+      pVar: fix2(pAvgVar),
+      jTransfer: jTransferSum,
+      pTransfer: pTransferSum,
+    }
+  };
+}
+
 /* ══════ RENDER ══════ */
 function render({dateHeaders,jTeam,pTeam}){
-  // 팀 일평균
   const dayAvg=(team,i)=>{const v=team.map(m=>m.scores[i]).filter(v=>v!==null);return v.length?fix2(avgArr(v)):null;};
-  // 결과
   const dayResults={};
   dateHeaders.forEach((d,i)=>{
     const jA=dayAvg(jTeam,i),pA=dayAvg(pTeam,i);
@@ -443,25 +555,68 @@ function render({dateHeaders,jTeam,pTeam}){
   });
   document.getElementById('week-meta').textContent=`총 ${TOTAL_WD}평일 · J ${totalJ}승 · P ${totalP}승`;
 
-  // Monte Carlo
-  let jProb=0.5;
-  if(played>0){
-    const margins=playedDates.map(d=>dayResults[d].j-dayResults[d].p);
-    const p1=1/(1+Math.exp(-0.2*avgArr(margins)));
-    const p2=jWins/played;
-    const p=0.6*p1+0.4*p2;
-    let jF=0;
-    for(let s=0;s<10000;s++){let jW=jWins,pW=pWins,r=remaining;while(r>0&&jW<TARGET&&pW<TARGET){Math.random()<p?jW++:pW++;r--;}if(jW>=TARGET)jF++;}
-    jProb=jF/10000;
-  }
+  /* ── 4요인 확률 계산 ── */
+  const { p: jProb, factors } = computeWinProbability(
+    playedDates, dayResults, jWins, pWins, remaining, jTeam, pTeam
+  );
+
   setTimeout(()=>{
     document.getElementById('j-prob').textContent=(jProb*100).toFixed(1)+'%';
     document.getElementById('p-prob').textContent=((1-jProb)*100).toFixed(1)+'%';
     document.getElementById('j-gauge').style.width=(jProb*100)+'%';
     document.getElementById('p-gauge').style.width=((1-jProb)*100)+'%';
+
+    // 알고리즘 요인 UI
+    if (factors) {
+      const fmt = v => v.toFixed(1) + '%';
+      const bar = (v, color) => `<div style="width:${Math.round(v*0.8)}px;height:6px;background:${color};border-radius:3px;display:inline-block;"></div>`;
+      document.getElementById('algo-factors').innerHTML = `
+        <div class="algo-factor">
+          <div class="af-label">① 전체 점수차 기반 확률</div>
+          <div class="af-val">평균 마진 <b>${factors.avgMargin > 0 ? '+' : ''}${factors.avgMargin}</b> → J <b style="color:var(--j)">${fmt(factors.p1)}</b> / P <b style="color:var(--p)">${fmt(100-factors.p1)}</b></div>
+        </div>
+        <div class="algo-factor">
+          <div class="af-label">② 최근 3경기 모멘텀 (지수가중)</div>
+          <div class="af-val">J 모멘텀 <b style="color:var(--j)">${fmt(factors.p2)}</b> / P <b style="color:var(--p)">${fmt(100-factors.p2)}</b></div>
+        </div>
+        <div class="algo-factor">
+          <div class="af-label">③ 팀 일관성 지수 (분산 역수)</div>
+          <div class="af-val">J 분산 <b>${factors.jVar}</b> / P 분산 <b>${factors.pVar}</b><br>→ J 안정성 <b style="color:var(--j)">${fmt(factors.p3)}</b></div>
+        </div>
+        <div class="algo-factor">
+          <div class="af-label">④ 이관매출 역량 비율</div>
+          <div class="af-val">J <b style="color:var(--j)">${factors.jTransfer > 0 ? factors.jTransfer.toLocaleString('ko-KR')+'원' : '미입력'}</b><br>P <b style="color:var(--p)">${factors.pTransfer > 0 ? factors.pTransfer.toLocaleString('ko-KR')+'원' : '미입력'}</b></div>
+        </div>
+      `;
+      // 가중치 반영 테이블
+      const factorData = [
+        { name: '① 점수차 기반 (35%)', j: factors.p1, p: 100-factors.p1 },
+        { name: '② 최근 모멘텀 (35%)', j: factors.p2, p: 100-factors.p2 },
+        { name: '③ 일관성 지수 (15%)', j: factors.p3, p: 100-factors.p3 },
+        { name: '④ 이관매출 (15%)',    j: factors.p4, p: 100-factors.p4 },
+      ];
+      let detailHtml = '<div class="factor-detail">';
+      factorData.forEach(f => {
+        const maxBar = 120;
+        detailHtml += `<div class="factor-row">
+          <span class="factor-name">${f.name}</span>
+          <div class="factor-bars">
+            <span class="factor-num-j" style="color:var(--j)">${f.j.toFixed(1)}%</span>
+            <div style="width:${Math.round(f.j/100*maxBar)}px;height:5px;background:var(--j);border-radius:3px;opacity:.8;"></div>
+            <div style="width:2px"></div>
+            <div style="width:${Math.round(f.p/100*maxBar)}px;height:5px;background:var(--p);border-radius:3px;opacity:.8;"></div>
+            <span class="factor-num-p" style="color:var(--p)">${f.p.toFixed(1)}%</span>
+          </div>
+        </div>`;
+      });
+      detailHtml += '</div>';
+      document.getElementById('factor-detail-container').innerHTML = detailHtml;
+    } else {
+      document.getElementById('algo-factors').innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:1/-1">경기 데이터가 쌓이면 요인별 분석이 표시됩니다.</div>';
+    }
   },600);
 
-  // Stakes — 이관매출 기준, 인턴 제외
+  // Stakes
   const jLeading=jWins>=pWins;
   const winTeam=jLeading?jTeam:pTeam, loseTeam=jLeading?pTeam:jTeam;
   const wL=jLeading?'j':'p', lL=jLeading?'p':'j';
@@ -475,7 +630,7 @@ function render({dateHeaders,jTeam,pTeam}){
     if(!list.length){body.innerHTML='<div class="s-note">이관매출 데이터를 입력해주세요</div>';return;}
     list.forEach((m,i)=>{
       const row=document.createElement('div'); row.className='s-row';
-      row.innerHTML=`<div class="s-rank">${i+1}</div><div class="s-name">${m.name}</div><span class="s-team-chip ${team}">${team.toUpperCase()}팀</span><div class="s-transfer">${m.transfer>0?m.transfer.toLocaleString('ko-KR')+'원':'데이터 없음'}</div>`;
+      row.innerHTML=`<div class="s-rank">${i+1}</div><div class="s-name-st">${m.name}</div><span class="s-team-chip ${team}">${team.toUpperCase()}팀</span><div class="s-transfer">${m.transfer>0?m.transfer.toLocaleString('ko-KR')+'원':'데이터 없음'}</div>`;
       body.appendChild(row);
     });
     const note=document.createElement('div'); note.className='s-note';
@@ -516,7 +671,6 @@ function render({dateHeaders,jTeam,pTeam}){
   document.getElementById('update-time').textContent=`${String(now2.getHours()).padStart(2,'0')}:${String(now2.getMinutes()).padStart(2,'0')} 업데이트`;
   const badge=document.getElementById('update-badge');
   badge.style.display='flex';
-
   document.getElementById('loading').style.display='none';
   document.getElementById('dashboard').style.display='block';
 }
@@ -539,7 +693,7 @@ async function loadData(){
 }
 
 loadData();
-setInterval(loadData, 5*60*1000); // 5분마다 자동 갱신
+setInterval(loadData, 5*60*1000);
 </script>
 </body>
 </html>
