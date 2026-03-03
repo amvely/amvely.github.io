@@ -898,7 +898,7 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
     const recent5 = combinedTimeline.slice(-5);
     const recentDots = recent5.map((ev, idx) => {
       const isLast = idx === recent5.length - 1;
-      const dotLabel = ev.isOm ? '📺' : ev.winner.toUpperCase();
+      const dotLabel = ev.winner.toUpperCase();
       return `<div class="s-dot ${isLast && streak >= 2 ? 'fire' : ev.winner}" title="${ev.label}">${dotLabel}</div>`;
     }).join('');
 
