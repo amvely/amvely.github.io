@@ -1604,29 +1604,52 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
       ...jTeam.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2),
       ...pTeam.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2)
     ].map(m=>m.name));
+    const eduSort=(a,b)=>{
+      if(a.transfer!==b.transfer) return a.transfer-b.transfer;
+      const aOM=a.otherMedia??Infinity, bOM=b.otherMedia??Infinity;
+      if(aOM!==bOM) return aOM-bOM;
+      return a.avg-b.avg;
+    };
     eduNames = new Set([
-      ...jTeam.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2),
-      ...pTeam.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2)
+      ...jTeam.filter(m=>!m.isIntern).sort(eduSort).slice(0,2),
+      ...pTeam.filter(m=>!m.isIntern).sort(eduSort).slice(0,2)
     ].map(m=>m.name));
   } else {
     const jLeading2 = jWins > pWins;
     const winTeam2  = jLeading2 ? jTeam : pTeam;
     const loseTeam2 = jLeading2 ? pTeam : jTeam;
+    const eduSort2=(a,b)=>{
+      if(a.transfer!==b.transfer) return a.transfer-b.transfer;
+      const aOM=a.otherMedia??Infinity, bOM=b.otherMedia??Infinity;
+      if(aOM!==bOM) return aOM-bOM;
+      return a.avg-b.avg;
+    };
     exemptNames = new Set(winTeam2.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2).map(m=>m.name));
-    eduNames    = new Set(loseTeam2.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2).map(m=>m.name));
+    eduNames    = new Set(loseTeam2.filter(m=>!m.isIntern).sort(eduSort2).slice(0,2).map(m=>m.name));
   }
 
   const jLeading=jWins>=pWins;
   const winTeam=jLeading?jTeam:pTeam, loseTeam=jLeading?pTeam:jTeam;
   const wL=jLeading?'j':'p', lL=jLeading?'p':'j';
+  const eduSortFn=(a,b)=>{
+    if(a.transfer!==b.transfer) return a.transfer-b.transfer;
+    const aOM=a.otherMedia??Infinity, bOM=b.otherMedia??Infinity;
+    if(aOM!==bOM) return aOM-bOM;
+    return a.avg-b.avg;
+  };
   const exemptList=winTeam.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2);
-  const eduList=loseTeam.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2);
+  const eduList=loseTeam.filter(m=>!m.isIntern).sort(eduSortFn).slice(0,2);
 
-  const buildStakesList=(list,team)=>{
+  const buildStakesList=(list,team,showDetail)=>{
     const frag=document.createDocumentFragment();
     list.forEach((m,i)=>{
       const row=document.createElement('div'); row.className='s-row';
-      row.innerHTML=`<div class="s-rank">${i+1}</div><div class="s-name-st">${m.name}</div><span class="s-team-chip ${team}">${team.toUpperCase()}팀</span><div class="s-transfer">${m.transfer>0?m.transfer.toLocaleString('ko-KR')+'원':'데이터 없음'}</div>`;
+      const transferTxt=m.transfer>0?m.transfer.toLocaleString('ko-KR')+'원':'데이터 없음';
+      const omVal=m.otherMedia!==null&&m.otherMedia!==undefined?m.otherMedia:'—';
+      const detailHtml=showDetail
+        ?`<div style="display:flex;gap:6px;margin-left:auto;align-items:center"><span style="font-size:10px;color:#64748b">이관</span><div class="s-transfer">${transferTxt}</div><span style="font-size:10px;color:#64748b">기타</span><span style="font-size:12px;font-weight:800;color:rgba(180,155,255,.9)">${omVal}</span><span style="font-size:10px;color:#64748b">평점</span><span style="font-size:12px;font-weight:800;color:#94a3b8">${m.avg}</span></div>`
+        :`<div class="s-transfer">${transferTxt}</div>`;
+      row.innerHTML=`<div class="s-rank">${i+1}</div><div class="s-name-st">${m.name}</div><span class="s-team-chip ${team}">${team.toUpperCase()}팀</span>${detailHtml}`;
       frag.appendChild(row);
     });
     return frag;
@@ -1634,6 +1657,7 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
 
   const buildStakes=(list,id,team,list2,team2)=>{
     const body=document.getElementById(id); body.innerHTML='';
+    const isEdu=id==='edu-body';
     if(list2!==undefined){
       // 동점: 2열 레이아웃 — J팀 | P팀
       const grid=document.createElement('div'); grid.className='stakes-tie-grid';
@@ -1641,13 +1665,13 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
       const colA=document.createElement('div'); colA.className='stakes-tie-col';
       const lblA=document.createElement('div'); lblA.className=`stakes-tie-team-lbl ${team}`; lblA.textContent=`${team.toUpperCase()}팀`;
       colA.appendChild(lblA);
-      if(list.length) colA.appendChild(buildStakesList(list,team));
+      if(list.length) colA.appendChild(buildStakesList(list,team,isEdu));
       else { const e=document.createElement('div'); e.className='s-note'; e.textContent='데이터 없음'; colA.appendChild(e); }
       // P팀 컬럼
       const colB=document.createElement('div'); colB.className='stakes-tie-col';
       const lblB=document.createElement('div'); lblB.className=`stakes-tie-team-lbl ${team2}`; lblB.textContent=`${team2.toUpperCase()}팀`;
       colB.appendChild(lblB);
-      if(list2.length) colB.appendChild(buildStakesList(list2,team2));
+      if(list2.length) colB.appendChild(buildStakesList(list2,team2,isEdu));
       else { const e=document.createElement('div'); e.className='s-note'; e.textContent='데이터 없음'; colB.appendChild(e); }
       grid.appendChild(colA); grid.appendChild(colB);
       body.appendChild(grid);
@@ -1656,7 +1680,7 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
       body.appendChild(note);
     } else {
       if(!list.length){body.innerHTML='<div class="s-note">이관매출 데이터를 입력해주세요</div>';return;}
-      body.appendChild(buildStakesList(list,team));
+      body.appendChild(buildStakesList(list,team,isEdu));
       const note=document.createElement('div'); note.className='s-note';
       note.innerHTML=`※ 현재 기준 · 인턴 제외 · 최종 확정은 프로모션 종료 후<br>※ 승리팀 기준: 현재 리딩팀(${jLeading?'J':'P'}팀)`;
       body.appendChild(note);
@@ -1666,16 +1690,16 @@ function render({dateHeaders, jTeam, pTeam, weeklyOtherMedia}){
   if(isTie){
     const jExemptList=jTeam.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2);
     const pExemptList=pTeam.filter(m=>!m.isIntern).sort((a,b)=>b.transfer-a.transfer).slice(0,2);
-    const jEduList=jTeam.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2);
-    const pEduList=pTeam.filter(m=>!m.isIntern).sort((a,b)=>a.transfer-b.transfer).slice(0,2);
+    const jEduList=jTeam.filter(m=>!m.isIntern).sort(eduSortFn).slice(0,2);
+    const pEduList=pTeam.filter(m=>!m.isIntern).sort(eduSortFn).slice(0,2);
     // 동점: exempt 설명 업데이트
     document.querySelector('.stakes-card.exempt .stakes-desc').textContent='동점 — 양팀 이관매출 상위 2인 (인턴 제외)';
-    document.querySelector('.stakes-card.edu .stakes-desc').textContent='동점 — 양팀 이관매출 하위 2인 (인턴 제외)';
+    document.querySelector('.stakes-card.edu .stakes-desc').textContent='동점 — 양팀 이관매출↓ · 기타매체↓ · 평점↓ 순 각 2인 (인턴 제외)';
     buildStakes(jExemptList,'exempt-body','j',pExemptList,'p');
     buildStakes(jEduList,'edu-body','j',pEduList,'p');
   } else {
     document.querySelector('.stakes-card.exempt .stakes-desc').textContent='승리팀 이관매출 상위 2인 (인턴 제외)';
-    document.querySelector('.stakes-card.edu .stakes-desc').textContent='패배팀 이관매출 하위 2인 (인턴 제외)';
+    document.querySelector('.stakes-card.edu .stakes-desc').textContent='패배팀 이관매출↓ · 기타매체↓ · 평점↓ 순 2인 (인턴 제외)';
     buildStakes(exemptList,'exempt-body',wL);
     buildStakes(eduList,'edu-body',lL);
   }
